@@ -4,11 +4,16 @@ import { Link } from "react-router-dom";
 import { Clock, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import ProgressTracker from "@/components/ProgressTracker";
+import CalendarView from "@/components/CalendarView";
+import ResearchCitation from "@/components/ResearchCitation";
 import { getSupplementsByIds, Supplement } from "@/lib/supplements";
 import { getUserSupplements, canRetakeAssessment, getTimeUntilNextAssessment } from "@/lib/ai-recommender";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Track = () => {
+  const { user } = useAuth();
   const [supplements, setSupplements] = useState<Supplement[]>([]);
   const [canRetake, setCanRetake] = useState(true);
   const [timeRemaining, setTimeRemaining] = useState("");
@@ -50,19 +55,37 @@ const Track = () => {
             <p className="text-lg text-foreground/80 max-w-2xl mx-auto animate-fade-in animation-delay-100">
               Monitor your supplement intake and stay on track with your wellness goals.
             </p>
+            {user && (
+              <p className="mt-2 text-primary font-medium animate-fade-in animation-delay-200">
+                Welcome back, {user.user_metadata.full_name || user.user_metadata.username}
+              </p>
+            )}
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 animate-slide-in-left animation-delay-200">
+          <div className="mb-8 animate-slide-in-left animation-delay-200">
+            <ResearchCitation />
+          </div>
+          
+          <Tabs defaultValue="weekly" className="mb-8">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+              <TabsTrigger value="weekly">Weekly View</TabsTrigger>
+              <TabsTrigger value="calendar">Calendar View</TabsTrigger>
+            </TabsList>
+            <TabsContent value="weekly" className="animate-slide-in-left animation-delay-200">
               <ProgressTracker />
-            </div>
-            
-            <div className="animate-slide-in-right animation-delay-300">
+            </TabsContent>
+            <TabsContent value="calendar" className="animate-slide-in-right animation-delay-200">
+              <CalendarView />
+            </TabsContent>
+          </Tabs>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-3 animate-slide-in-right animation-delay-300">
               <div className="bg-card p-6 rounded-xl border border-border h-full">
                 <h3 className="text-xl font-bold mb-6">Your Current Plan</h3>
                 
                 {supplements.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {supplements.map((supplement) => (
                       <div key={supplement.id} className="flex items-center p-3 rounded-lg bg-muted/50 hover:bg-muted transition-all-200">
                         <div className="h-12 w-12 rounded-full overflow-hidden mr-4 bg-muted">
