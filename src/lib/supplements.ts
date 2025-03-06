@@ -101,6 +101,36 @@ export const supplements: Supplement[] = [
     timing: "Morning before breakfast",
     imageUrl: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     recommended: false
+  },
+  {
+    id: "vitamin-c",
+    name: "Vitamin C",
+    category: "Vitamin",
+    description: "Powerful antioxidant supporting immune health.",
+    benefits: [
+      "Enhances immune system function",
+      "Acts as an antioxidant to protect cells",
+      "Supports collagen production for skin health"
+    ],
+    dosage: "500-1000mg daily",
+    timing: "Throughout the day with meals",
+    imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false
+  },
+  {
+    id: "turmeric",
+    name: "Turmeric Curcumin",
+    category: "Herbal",
+    description: "Natural anti-inflammatory and antioxidant supplement.",
+    benefits: [
+      "Reduces inflammation and joint pain",
+      "Provides powerful antioxidant protection",
+      "Supports brain health and cognitive function"
+    ],
+    dosage: "500-1000mg daily",
+    timing: "With food containing some fat",
+    imageUrl: "https://images.unsplash.com/photo-1615485500704-8e990f9900e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false
   }
 ];
 
@@ -114,4 +144,9 @@ export const getAllSupplements = (): Supplement[] => {
 
 export const getSupplementById = (id: string): Supplement | undefined => {
   return supplements.find(supplement => supplement.id === id);
+};
+
+// Get supplements by IDs
+export const getSupplementsByIds = (ids: string[]): Supplement[] => {
+  return supplements.filter(supplement => ids.includes(supplement.id));
 };

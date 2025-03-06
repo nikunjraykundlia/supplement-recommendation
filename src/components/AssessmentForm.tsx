@@ -1,7 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, ChevronRight, ArrowRight } from "lucide-react";
+import { Check, ChevronRight, ArrowRight, Clock } from "lucide-react";
+import { toast } from "sonner";
+import { canRetakeAssessment, getTimeUntilNextAssessment } from "@/lib/ai-recommender";
 import { cn } from "@/lib/utils";
 
 interface StepProps {
@@ -69,19 +71,48 @@ const AssessmentForm = () => {
     goals: [] as string[],
     lifestyle: "",
     concerns: [] as string[],
+    deficiencies: [] as string[],
+    dietaryPreferences: [] as string[],
   });
+  
+  const [canRetake, setCanRetake] = useState(true);
+  const [timeRemaining, setTimeRemaining] = useState("");
+  
+  useEffect(() => {
+    // Check if user can retake assessment
+    const checkAssessmentStatus = () => {
+      const canTakeAssessment = canRetakeAssessment();
+      setCanRetake(canTakeAssessment);
+      
+      if (!canTakeAssessment) {
+        setTimeRemaining(getTimeUntilNextAssessment());
+      }
+    };
+    
+    checkAssessmentStatus();
+    const intervalId = setInterval(checkAssessmentStatus, 60000); // Check every minute
+    
+    return () => clearInterval(intervalId);
+  }, []);
   
   const goals = ["Energy Boost", "Immune Support", "Muscle Recovery", "Better Sleep", "Brain Function", "Stress Management"];
   const lifestyles = ["Very Active", "Moderately Active", "Lightly Active", "Sedentary"];
   const concerns = ["Joint Pain", "Digestive Issues", "Low Energy", "Poor Sleep", "Brain Fog", "Stress", "Vitamin Deficiency"];
+  const deficiencies = ["Iron", "Vitamin D", "Magnesium", "Zinc", "Vitamin B12", "Omega-3", "Calcium"];
+  const dietaryPreferences = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "No Restrictions"];
   
   const handleNextStep = () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // Submit and navigate to dashboard
-      navigate("/dashboard");
+      // Submit form and navigate to results page
+      if (!canRetake) {
+        toast.error(`You can take another assessment in ${timeRemaining}`);
+        return;
+      }
+      
+      navigate("/results", { state: { assessmentData: formData } });
     }
   };
   
@@ -110,6 +141,24 @@ const AssessmentForm = () => {
     });
   };
   
+  const toggleDeficiency = (deficiency: string) => {
+    setFormData(prev => {
+      const newDeficiencies = prev.deficiencies.includes(deficiency)
+        ? prev.deficiencies.filter(d => d !== deficiency)
+        : [...prev.deficiencies, deficiency];
+      return { ...prev, deficiencies: newDeficiencies };
+    });
+  };
+  
+  const toggleDietaryPreference = (preference: string) => {
+    setFormData(prev => {
+      const newPreferences = prev.dietaryPreferences.includes(preference)
+        ? prev.dietaryPreferences.filter(p => p !== preference)
+        : [...prev.dietaryPreferences, preference];
+      return { ...prev, dietaryPreferences: newPreferences };
+    });
+  };
+  
   const isStepComplete = (step: number) => {
     switch (step) {
       case 1:
@@ -118,10 +167,49 @@ const AssessmentForm = () => {
         return formData.lifestyle !== "";
       case 3:
         return formData.concerns.length > 0;
+      case 4:
+        return true; // Optional step
       default:
         return false;
     }
   };
+
+  if (!canRetake) {
+    return (
+      <div className="max-w-3xl mx-auto text-center">
+        <div className="bg-card border border-border rounded-xl p-8">
+          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
+            <Clock className="h-8 w-8 text-muted-foreground" />
+          </div>
+          
+          <h2 className="text-2xl font-bold mb-4">Assessment Cooldown Period</h2>
+          <p className="text-foreground/70 mb-6">
+            You've recently completed a health assessment. To ensure accuracy and prevent overassessment, 
+            you can take another assessment in:
+          </p>
+          
+          <div className="inline-flex items-center justify-center bg-muted px-6 py-3 rounded-lg text-xl font-mono font-medium mb-6">
+            {timeRemaining}
+          </div>
+          
+          <p className="text-sm text-foreground/60 mb-6">
+            This cooldown period helps ensure that your supplement recommendations remain stable 
+            and gives your body time to respond to your current plan.
+          </p>
+          
+          <div className="flex justify-center">
+            <button
+              onClick={() => navigate("/track")}
+              className="inline-flex items-center px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium"
+            >
+              View Your Current Plan
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -222,6 +310,50 @@ const AssessmentForm = () => {
             </div>
           </div>
         </Step>
+        
+        <Step
+          title="Advanced Details"
+          description="Help us further personalize your recommendations"
+          isActive={currentStep === 4}
+          isCompleted={currentStep > 4}
+          stepNumber={4}
+        >
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Do you have any known nutritional deficiencies? (Select all that apply)
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {deficiencies.map((deficiency) => (
+                  <OptionButton
+                    key={deficiency}
+                    selected={formData.deficiencies.includes(deficiency)}
+                    onClick={() => toggleDeficiency(deficiency)}
+                  >
+                    {deficiency}
+                  </OptionButton>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Do you follow any specific dietary patterns? (Select all that apply)
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {dietaryPreferences.map((preference) => (
+                  <OptionButton
+                    key={preference}
+                    selected={formData.dietaryPreferences.includes(preference)}
+                    onClick={() => toggleDietaryPreference(preference)}
+                  >
+                    {preference}
+                  </OptionButton>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Step>
       </div>
       
       <div className="mt-12 flex justify-between">
@@ -249,14 +381,14 @@ const AssessmentForm = () => {
               : "bg-muted text-muted-foreground cursor-not-allowed"
           )}
         >
-          {currentStep < 3 ? (
+          {currentStep < 4 ? (
             <>
               Next Step
               <ChevronRight className="w-5 h-5 ml-1" />
             </>
           ) : (
             <>
-              Complete Assessment
+              Get AI Recommendations
               <ArrowRight className="w-5 h-5 ml-1" />
             </>
           )}
