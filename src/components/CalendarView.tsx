@@ -1,172 +1,118 @@
 
-import { useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from 'react';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { format, isSameDay } from "date-fns";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// Example supplement intake data (in a real app, this would come from Supabase)
-// Format: Array of objects with date and status (taken or missed)
-type IntakeRecord = {
+interface CalendarViewProps {
+  selectedDate?: Date;
+  onDateSelect?: (date: Date) => void;
+  markedDates?: Date[];
+  className?: string;
+}
+
+interface CalendarDayProps {
   date: Date;
-  morning: boolean;
-  evening: boolean;
+  isCurrentMonth: boolean;
+  isSelected: boolean;
+  isMarked: boolean;
+  onClick: () => void;
+  className?: string;
+}
+
+const CalendarDay: React.FC<CalendarDayProps> = ({ 
+  date, 
+  isCurrentMonth, 
+  isSelected, 
+  isMarked, 
+  onClick,
+  className
+}) => {
+  return (
+    <div
+      className={cn(
+        "h-10 w-10 flex items-center justify-center rounded-full cursor-pointer",
+        isCurrentMonth ? "text-gray-900" : "text-gray-400",
+        isSelected ? "bg-primary text-white" : "",
+        isMarked && !isSelected ? "bg-green-100 text-green-800" : "",
+        className
+      )}
+      onClick={onClick}
+    >
+      {format(date, 'd')}
+    </div>
+  );
 };
 
-// Mock data for demonstration - this would come from the database in a real implementation
-const mockIntakeData: IntakeRecord[] = [
-  ...[...Array(30)].map((_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    return {
-      date: new Date(date),
-      morning: Math.random() > 0.3,
-      evening: Math.random() > 0.35
-    };
-  })
-];
-
-const CalendarView = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [selectedDayData, setSelectedDayData] = useState<IntakeRecord | null>(null);
-
-  // Function to determine the CSS classes for a specific day in the calendar
-  const getDayClassNames = (day: Date) => {
-    const intakeRecord = mockIntakeData.find(record => 
-      isSameDay(new Date(record.date), day)
-    );
-
-    if (!intakeRecord) return "";
-
-    // Both morning and evening taken
-    if (intakeRecord.morning && intakeRecord.evening) {
-      return "bg-green-500/20 text-green-700 font-medium rounded-full";
-    }
-    // Only one of morning or evening taken
-    else if (intakeRecord.morning || intakeRecord.evening) {
-      return "bg-yellow-500/20 text-yellow-700 font-medium rounded-full";
-    }
-    // Neither taken
-    else {
-      return "bg-red-500/20 text-red-700 font-medium rounded-full";
-    }
+const CalendarView: React.FC<CalendarViewProps> = ({ 
+  selectedDate = new Date(),
+  onDateSelect,
+  markedDates = [],
+  className
+}) => {
+  const [displayMonth, setDisplayMonth] = React.useState(new Date());
+  
+  const daysInMonth = eachDayOfInterval({
+    start: startOfMonth(displayMonth),
+    end: endOfMonth(displayMonth)
+  });
+  
+  const startWeekday = getDay(startOfMonth(displayMonth));
+  
+  const handlePreviousMonth = () => {
+    setDisplayMonth(subMonths(displayMonth, 1));
   };
-
-  const handleDayClick = (day: Date | undefined) => {
-    if (!day) return;
-    
-    setDate(day);
-    
-    // Find the intake record for the selected day
-    const intakeRecord = mockIntakeData.find(record => 
-      isSameDay(new Date(record.date), day)
-    );
-    
-    setSelectedDayData(intakeRecord || null);
+  
+  const handleNextMonth = () => {
+    setDisplayMonth(addMonths(displayMonth, 1));
   };
-
+  
+  const isDateMarked = (date: Date) => {
+    return markedDates.some(markedDate => isSameDay(markedDate, date));
+  };
+  
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">Supplement Intake Calendar</CardTitle>
+    <Card className={cn("w-full max-w-md mx-auto", className)}>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle>{format(displayMonth, 'MMMM yyyy')}</CardTitle>
+        <div className="flex space-x-1">
+          <Button variant="outline" size="icon" onClick={handlePreviousMonth}>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon" onClick={handleNextMonth}>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-7 gap-6">
-          <div className="md:col-span-4">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={handleDayClick}
-              className={cn("p-3 pointer-events-auto")}
-              modifiersClassNames={{
-                selected: "bg-primary text-primary-foreground",
-              }}
-              modifiers={{
-                customModifier: (date) => mockIntakeData.some(record => 
-                  isSameDay(new Date(record.date), date)
-                ),
-              }}
-              components={{
-                Day: ({ date: dayDate, ...props }) => {
-                  const customClasses = getDayClassNames(dayDate);
-                  return (
-                    <button {...props} className={cn(props.className || "", customClasses)} />
-                  );
-                }
-              }}
-            />
-          </div>
-          
-          <div className="md:col-span-3">
-            <div className="p-4 bg-muted rounded-lg h-full">
-              <h3 className="font-medium mb-4">
-                {date ? format(date, "MMMM d, yyyy") : "Select a day"}
-              </h3>
-              
-              {selectedDayData ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span>Morning Supplement:</span>
-                    <span className={cn(
-                      "px-2 py-1 rounded-full text-xs font-medium",
-                      selectedDayData.morning 
-                        ? "bg-green-100 text-green-800" 
-                        : "bg-red-100 text-red-800"
-                    )}>
-                      {selectedDayData.morning ? "Taken" : "Missed"}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span>Evening Supplement:</span>
-                    <span className={cn(
-                      "px-2 py-1 rounded-full text-xs font-medium",
-                      selectedDayData.evening 
-                        ? "bg-green-100 text-green-800" 
-                        : "bg-red-100 text-red-800"
-                    )}>
-                      {selectedDayData.evening ? "Taken" : "Missed"}
-                    </span>
-                  </div>
-                  
-                  <div className="pt-4 border-t">
-                    <div className="flex justify-between items-center">
-                      <span>Daily completion:</span>
-                      <span className="font-medium">
-                        {selectedDayData.morning && selectedDayData.evening 
-                          ? "100%" 
-                          : selectedDayData.morning || selectedDayData.evening 
-                            ? "50%" 
-                            : "0%"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-muted-foreground">
-                  No data available for this day
-                </p>
-              )}
-              
-              <div className="mt-6">
-                <h4 className="text-sm font-medium mb-2">Legend:</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-full bg-green-500/20"></div>
-                    <span>All supplements taken</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-full bg-yellow-500/20"></div>
-                    <span>Some supplements taken</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-full bg-red-500/20"></div>
-                    <span>No supplements taken</span>
-                  </div>
-                </div>
-              </div>
+        <div className="grid grid-cols-7 gap-1 mb-2">
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+            <div key={day} className="text-center text-sm font-medium text-gray-500">
+              {day}
             </div>
-          </div>
+          ))}
+        </div>
+        
+        <div className="grid grid-cols-7 gap-1">
+          {/* Empty cells for days before the start of the month */}
+          {Array.from({ length: startWeekday }).map((_, index) => (
+            <div key={`empty-start-${index}`} className="h-10 w-10" />
+          ))}
+          
+          {/* Actual days of the month */}
+          {daysInMonth.map((day) => (
+            <CalendarDay
+              key={day.toString()}
+              date={day}
+              isCurrentMonth={true}
+              isSelected={selectedDate ? isSameDay(day, selectedDate) : false}
+              isMarked={isDateMarked(day)}
+              onClick={() => onDateSelect && onDateSelect(day)}
+              className=""
+            />
+          ))}
         </div>
       </CardContent>
     </Card>

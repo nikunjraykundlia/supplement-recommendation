@@ -1,5 +1,6 @@
 
 import { createClient } from '@supabase/supabase-js'
+import { toast } from 'sonner'
 
 const supabaseUrl = 'https://kbvezdhokmsflzrrmenz.supabase.co'
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtidmV6ZGhva21zZmx6cnJtZW56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyNzM2NzIsImV4cCI6MjA1Njg0OTY3Mn0.YYZO2_HUFT0Wl5IjYo8xddz5A9SILVfA-HDSMkGuFg8'
@@ -69,41 +70,86 @@ export const getSession = async () => {
   return data.session
 }
 
-// Add social login methods
+// Add social login methods with better error handling
 export const signInWithGoogle = async () => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin + '/dashboard'
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/dashboard'
+      }
+    })
+    
+    if (error) {
+      // Handle the "provider not enabled" error more gracefully
+      if (error.message.includes('provider is not enabled')) {
+        toast.error('Google login is not enabled. Please enable it in your Supabase project settings.')
+        console.error('You need to enable Google provider in Supabase Authentication settings')
+      } else {
+        throw error
+      }
     }
-  })
-  
-  if (error) throw error
-  return data
+    
+    return data
+  } catch (error: any) {
+    console.error('Google sign-in error:', error)
+    toast.error(error.message || 'Failed to sign in with Google')
+    throw error
+  }
 }
 
 export const signInWithTwitter = async () => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'twitter',
-    options: {
-      redirectTo: window.location.origin + '/dashboard'
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'twitter',
+      options: {
+        redirectTo: window.location.origin + '/dashboard'
+      }
+    })
+    
+    if (error) {
+      // Handle the "provider not enabled" error more gracefully
+      if (error.message.includes('provider is not enabled')) {
+        toast.error('Twitter login is not enabled. Please enable it in your Supabase project settings.')
+        console.error('You need to enable Twitter provider in Supabase Authentication settings')
+      } else {
+        throw error
+      }
     }
-  })
-  
-  if (error) throw error
-  return data
+    
+    return data
+  } catch (error: any) {
+    console.error('Twitter sign-in error:', error)
+    toast.error(error.message || 'Failed to sign in with Twitter')
+    throw error
+  }
 }
 
 export const signInWithGithub = async () => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'github',
-    options: {
-      redirectTo: window.location.origin + '/dashboard'
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: window.location.origin + '/dashboard'
+      }
+    })
+    
+    if (error) {
+      // Handle the "provider not enabled" error more gracefully
+      if (error.message.includes('provider is not enabled')) {
+        toast.error('GitHub login is not enabled. Please enable it in your Supabase project settings.')
+        console.error('You need to enable GitHub provider in Supabase Authentication settings')
+      } else {
+        throw error
+      }
     }
-  })
-  
-  if (error) throw error
-  return data
+    
+    return data
+  } catch (error: any) {
+    console.error('GitHub sign-in error:', error)
+    toast.error(error.message || 'Failed to sign in with GitHub')
+    throw error
+  }
 }
 
 // Supplement tracking
