@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, subMonths, addMonths, isSameDay, isToday } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 
 interface CalendarViewProps {
   selectedDate?: Date;
@@ -18,6 +18,7 @@ interface CalendarDayProps {
   isCurrentMonth: boolean;
   isSelected: boolean;
   isMarked: boolean;
+  isToday: boolean;
   onClick: () => void;
   className?: string;
 }
@@ -26,22 +27,30 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
   date, 
   isCurrentMonth, 
   isSelected, 
-  isMarked, 
+  isMarked,
+  isToday: isTodayDate,
   onClick,
   className
 }) => {
   return (
     <div
       className={cn(
-        "h-10 w-10 flex items-center justify-center rounded-full cursor-pointer",
-        isCurrentMonth ? "text-gray-900" : "text-gray-400",
-        isSelected ? "bg-primary text-white" : "",
-        isMarked && !isSelected ? "bg-green-100 text-green-800" : "",
+        "h-10 w-10 flex items-center justify-center rounded-full cursor-pointer relative",
+        isCurrentMonth ? "text-foreground" : "text-foreground/30",
+        isSelected ? "bg-primary text-primary-foreground font-medium" : "",
+        !isSelected && isMarked ? "bg-green-100 text-green-800" : "",
+        !isSelected && !isMarked && isTodayDate ? "border border-primary" : "",
+        !isSelected && !isMarked && !isTodayDate ? "hover:bg-muted" : "",
         className
       )}
       onClick={onClick}
     >
       {format(date, 'd')}
+      {isMarked && !isSelected && (
+        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
+          <Check className="h-3 w-3 text-green-600" />
+        </div>
+      )}
     </div>
   );
 };
@@ -89,7 +98,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({
       <CardContent>
         <div className="grid grid-cols-7 gap-1 mb-2">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div key={day} className="text-center text-sm font-medium text-gray-500">
+            <div key={day} className="text-center text-sm font-medium text-foreground/60">
               {day}
             </div>
           ))}
@@ -109,10 +118,22 @@ const CalendarView: React.FC<CalendarViewProps> = ({
               isCurrentMonth={true}
               isSelected={selectedDate ? isSameDay(day, selectedDate) : false}
               isMarked={isDateMarked(day)}
+              isToday={isToday(day)}
               onClick={() => onDateSelect && onDateSelect(day)}
               className=""
             />
           ))}
+        </div>
+        
+        <div className="mt-4 flex justify-between text-xs text-foreground/70">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded-full bg-green-100"></div>
+            <span>Supplements taken</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded-full border border-primary"></div>
+            <span>Today</span>
+          </div>
         </div>
       </CardContent>
     </Card>

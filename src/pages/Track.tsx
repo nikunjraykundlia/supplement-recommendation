@@ -11,7 +11,6 @@ import { useAuth } from "@/contexts/AuthContext";
 const Track = () => {
   const { user } = useAuth();
   const [supplements, setSupplements] = useState<Supplement[]>([]);
-  const [canRetake, setCanRetake] = useState(true);
   
   useEffect(() => {
     // Scroll to top on page load

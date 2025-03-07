@@ -72,26 +72,22 @@ const CombinedTracker = () => {
     }
   };
   
-  // Calculate weekly compliance percentage
-  const calculateCompliance = () => {
-    let totalPossibleDoses = 0;
-    let takenDoses = 0;
-    
-    intakeData.forEach(day => {
-      if (!day.isFuture) {
-        totalPossibleDoses += 2; // Morning and evening
-        if (day.morning === true) takenDoses++;
-        if (day.evening === true) takenDoses++;
-      }
-    });
-    
-    return totalPossibleDoses === 0 ? 0 : Math.round((takenDoses / totalPossibleDoses) * 100);
-  };
-  
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
     // Here you would typically fetch data for the selected date
     console.log("Selected date:", format(date, 'yyyy-MM-dd'));
+  };
+  
+  const handleDayClick = (date: Date) => {
+    // Add logic to handle clicking on a specific day in the calendar
+    console.log("Clicked on date:", format(date, 'yyyy-MM-dd'));
+    
+    // Toggle marked status for this date
+    if (markedDates.some(d => isSameDay(d, date))) {
+      setMarkedDates(markedDates.filter(d => !isSameDay(d, date)));
+    } else {
+      setMarkedDates([...markedDates, date]);
+    }
   };
   
   return (
@@ -105,19 +101,6 @@ const CombinedTracker = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Weekly Compliance</span>
-              <span className="text-sm font-medium">{calculateCompliance()}%</span>
-            </div>
-            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-primary transition-all-300 rounded-full"
-                style={{ width: `${calculateCompliance()}%` }}
-              />
-            </div>
-          </div>
-          
           <div className="overflow-x-auto">
             <table className="w-full min-w-[400px] text-sm">
               <thead>
@@ -175,21 +158,39 @@ const CombinedTracker = () => {
               <LineChart className="h-3 w-3" />
               <span>Tracking started on Monday</span>
             </div>
-            <button className="text-primary hover:underline">
-              View Full History
-            </button>
           </div>
         </CardContent>
       </Card>
       
       <div className="mt-8">
         <h3 className="text-xl font-bold mb-4">Monthly Calendar View</h3>
+        <p className="text-sm text-foreground/70 mb-4">
+          Green dots indicate days when you've taken all your supplements. Click on a date to view or update your intake.
+        </p>
         <CalendarView 
           selectedDate={selectedDate}
           onDateSelect={handleDateSelect}
           markedDates={markedDates}
-          className="bg-card"
+          className="bg-card border border-border rounded-xl p-4"
         />
+        
+        <div className="mt-6 p-4 bg-muted/30 rounded-lg border border-border">
+          <h4 className="font-medium mb-2">
+            {format(selectedDate, 'MMMM d, yyyy')} - Supplement Details
+          </h4>
+          <div className="text-sm">
+            {markedDates.some(d => isSameDay(d, selectedDate)) ? (
+              <div className="text-green-600 flex items-center">
+                <Check className="w-4 h-4 mr-2" />
+                All supplements taken for this day
+              </div>
+            ) : (
+              <div className="text-amber-500">
+                No records found for this day. Click on the date in the calendar to mark as taken.
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

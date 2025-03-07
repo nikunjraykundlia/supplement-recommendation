@@ -2,8 +2,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Github, Twitter } from 'lucide-react'
-import { signIn, signInWithGoogle, signInWithTwitter, signInWithGithub } from '@/lib/supabase'
+import { Eye, EyeOff } from 'lucide-react'
+import { signIn, signInWithGoogle } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -43,25 +43,13 @@ const Login = () => {
     }
   }
 
-  const handleSocialSignIn = async (provider: 'google' | 'twitter' | 'github') => {
+  const handleGoogleSignIn = async () => {
     try {
       setLoading(true)
-      
-      switch (provider) {
-        case 'google':
-          await signInWithGoogle()
-          break
-        case 'twitter':
-          await signInWithTwitter()
-          break
-        case 'github':
-          await signInWithGithub()
-          break
-      }
-      
+      await signInWithGoogle()
     } catch (error: any) {
-      console.error(`${provider} sign-in error:`, error)
-      toast.error(error.message || `Failed to sign in with ${provider}. Please try again.`)
+      console.error(`Google sign-in error:`, error)
+      toast.error(error.message || `Failed to sign in with Google. Please try again.`)
       setLoading(false)
     }
   }
@@ -81,7 +69,7 @@ const Login = () => {
                 <Button 
                   variant="outline" 
                   className="w-full flex items-center justify-center gap-2"
-                  onClick={() => handleSocialSignIn('google')}
+                  onClick={handleGoogleSignIn}
                   disabled={loading}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -92,26 +80,6 @@ const Login = () => {
                     <path d="M1 1h22v22H1z" fill="none" />
                   </svg>
                   Continue with Google
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full flex items-center justify-center gap-2"
-                  onClick={() => handleSocialSignIn('twitter')}
-                  disabled={loading}
-                >
-                  <Twitter className="w-5 h-5 text-blue-400" />
-                  Continue with Twitter
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  className="w-full flex items-center justify-center gap-2"
-                  onClick={() => handleSocialSignIn('github')}
-                  disabled={loading}
-                >
-                  <Github className="w-5 h-5" />
-                  Continue with GitHub
                 </Button>
                 
                 <div className="flex items-center gap-4">
