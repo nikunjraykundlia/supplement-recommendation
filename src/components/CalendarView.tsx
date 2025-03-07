@@ -90,7 +90,7 @@ const CalendarView = () => {
                 Day: ({ date: dayDate, ...props }) => {
                   const customClasses = getDayClassNames(dayDate);
                   return (
-                    <button {...props} className={cn(props.className, customClasses)} />
+                    <button {...props} className={cn(props.className || "", customClasses)} />
                   );
                 }
               }}

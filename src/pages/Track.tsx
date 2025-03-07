@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import ProgressTracker from "@/components/ProgressTracker";
 import CalendarView from "@/components/CalendarView";
 import ResearchCitation from "@/components/ResearchCitation";
+import WeeklyCompliance from "@/components/WeeklyCompliance";
 import { getSupplementsByIds, Supplement } from "@/lib/supplements";
 import { getUserSupplements, canRetakeAssessment, getTimeUntilNextAssessment } from "@/lib/ai-recommender";
 import { cn } from "@/lib/utils";
@@ -66,18 +67,26 @@ const Track = () => {
             <ResearchCitation />
           </div>
           
-          <Tabs defaultValue="weekly" className="mb-8">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-              <TabsTrigger value="weekly">Weekly View</TabsTrigger>
-              <TabsTrigger value="calendar">Calendar View</TabsTrigger>
-            </TabsList>
-            <TabsContent value="weekly" className="animate-slide-in-left animation-delay-200">
-              <ProgressTracker />
-            </TabsContent>
-            <TabsContent value="calendar" className="animate-slide-in-right animation-delay-200">
-              <CalendarView />
-            </TabsContent>
-          </Tabs>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div className="lg:col-span-2 animate-slide-in-left animation-delay-200">
+              <Tabs defaultValue="weekly" className="">
+                <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-6">
+                  <TabsTrigger value="weekly">Weekly View</TabsTrigger>
+                  <TabsTrigger value="calendar">Calendar View</TabsTrigger>
+                </TabsList>
+                <TabsContent value="weekly">
+                  <ProgressTracker />
+                </TabsContent>
+                <TabsContent value="calendar">
+                  <CalendarView />
+                </TabsContent>
+              </Tabs>
+            </div>
+            
+            <div className="animate-slide-in-right animation-delay-300">
+              <WeeklyCompliance />
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-3 animate-slide-in-right animation-delay-300">

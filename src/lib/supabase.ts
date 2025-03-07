@@ -68,3 +68,79 @@ export const getSession = async () => {
   if (error) throw error
   return data.session
 }
+
+// Add social login methods
+export const signInWithGoogle = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin + '/dashboard'
+    }
+  })
+  
+  if (error) throw error
+  return data
+}
+
+export const signInWithTwitter = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'twitter',
+    options: {
+      redirectTo: window.location.origin + '/dashboard'
+    }
+  })
+  
+  if (error) throw error
+  return data
+}
+
+export const signInWithGithub = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: window.location.origin + '/dashboard'
+    }
+  })
+  
+  if (error) throw error
+  return data
+}
+
+// Supplement tracking
+export const recordSupplementIntake = async (userId: string, supplementId: string, date: string, taken: boolean, timeOfDay: string) => {
+  const { data, error } = await supabase
+    .from('supplement_tracking')
+    .upsert({
+      user_id: userId,
+      supplement_id: supplementId,
+      date,
+      taken,
+      time_of_day: timeOfDay
+    })
+    
+  if (error) throw error
+  return data
+}
+
+export const getSupplementIntakeRecords = async (userId: string, startDate: string, endDate: string) => {
+  const { data, error } = await supabase
+    .from('supplement_tracking')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('date', startDate)
+    .lte('date', endDate)
+    
+  if (error) throw error
+  return data
+}
+
+// Calculate weekly compliance score
+export const getWeeklyComplianceScore = async (userId: string, startDate: string, endDate: string) => {
+  const records = await getSupplementIntakeRecords(userId, startDate, endDate)
+  
+  const totalRecords = records.length
+  const takenRecords = records.filter(record => record.taken).length
+  
+  if (totalRecords === 0) return 0
+  return Math.round((takenRecords / totalRecords) * 100)
+}
