@@ -5,7 +5,6 @@ import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import SupplementCard from "@/components/SupplementCard";
 import SupplementDetail from "@/components/SupplementDetail";
-import WeeklyCompliance from "@/components/WeeklyCompliance";
 import { getRecommendedSupplements, Supplement } from "@/lib/supplements";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -119,10 +118,6 @@ const Dashboard = () => {
                     </div>
                   )}
                 </div>
-              </div>
-              
-              <div className="mb-12 animate-slide-up animation-delay-500">
-                <WeeklyCompliance />
               </div>
               
               <div className="text-center animate-slide-up animation-delay-600">

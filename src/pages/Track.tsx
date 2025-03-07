@@ -1,19 +1,17 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import ResearchCitation from "@/components/ResearchCitation";
 import CombinedTracker from "@/components/CombinedTracker";
-import SupplementResearch from "@/components/SupplementResearch";
 import { getSupplementsByIds, Supplement } from "@/lib/supplements";
-import { getUserSupplements, canRetakeAssessment, getTimeUntilNextAssessment } from "@/lib/ai-recommender";
+import { getUserSupplements } from "@/lib/ai-recommender";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Track = () => {
   const { user } = useAuth();
   const [supplements, setSupplements] = useState<Supplement[]>([]);
   const [canRetake, setCanRetake] = useState(true);
-  const [timeRemaining, setTimeRemaining] = useState("");
   
   useEffect(() => {
     // Scroll to top on page load
@@ -23,21 +21,6 @@ const Track = () => {
     const userSupplementIds = getUserSupplements();
     const userSupplements = getSupplementsByIds(userSupplementIds);
     setSupplements(userSupplements);
-    
-    // Check if user can retake assessment
-    const checkAssessmentStatus = () => {
-      const canTakeAssessment = canRetakeAssessment();
-      setCanRetake(canTakeAssessment);
-      
-      if (!canTakeAssessment) {
-        setTimeRemaining(getTimeUntilNextAssessment());
-      }
-    };
-    
-    checkAssessmentStatus();
-    const intervalId = setInterval(checkAssessmentStatus, 60000); // Check every minute
-    
-    return () => clearInterval(intervalId);
   }, []);
 
   return (
@@ -59,18 +42,10 @@ const Track = () => {
             )}
           </div>
           
-          <div className="mb-8 animate-slide-in-left animation-delay-200">
-            <ResearchCitation />
-          </div>
-          
           <div className="grid grid-cols-1 gap-8 mb-8">
             <div className="animate-slide-in-left animation-delay-200">
               <CombinedTracker />
             </div>
-          </div>
-          
-          <div className="grid grid-cols-1 gap-8 animate-slide-in-right animation-delay-300">
-            <SupplementResearch />
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
@@ -111,24 +86,12 @@ const Track = () => {
                 )}
                 
                 <div className="mt-8 pt-6 border-t border-border">
-                  {!canRetake ? (
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-2 text-sm text-foreground/70 mb-2">
-                        <Clock className="w-4 h-4" />
-                        <span>Next assessment available in {timeRemaining}</span>
-                      </div>
-                      <button disabled className="w-full text-center py-2.5 text-foreground/50 cursor-not-allowed">
-                        Assessment Cooldown Active
-                      </button>
-                    </div>
-                  ) : (
-                    <Link 
-                      to="/assessment"
-                      className="block w-full text-center py-2.5 text-primary hover:underline"
-                    >
-                      Retake Assessment
-                    </Link>
-                  )}
+                  <Link 
+                    to="/assessment"
+                    className="block w-full text-center py-2.5 text-primary hover:underline"
+                  >
+                    Retake Assessment
+                  </Link>
                 </div>
               </div>
             </div>

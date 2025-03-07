@@ -1,9 +1,8 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, ChevronRight, ArrowRight, Clock } from "lucide-react";
+import { Check, ChevronRight, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
-import { canRetakeAssessment, getTimeUntilNextAssessment } from "@/lib/ai-recommender";
 import { cn } from "@/lib/utils";
 
 interface StepProps {
@@ -75,26 +74,6 @@ const AssessmentForm = () => {
     dietaryPreferences: [] as string[],
   });
   
-  const [canRetake, setCanRetake] = useState(true);
-  const [timeRemaining, setTimeRemaining] = useState("");
-  
-  useEffect(() => {
-    // Check if user can retake assessment
-    const checkAssessmentStatus = () => {
-      const canTakeAssessment = canRetakeAssessment();
-      setCanRetake(canTakeAssessment);
-      
-      if (!canTakeAssessment) {
-        setTimeRemaining(getTimeUntilNextAssessment());
-      }
-    };
-    
-    checkAssessmentStatus();
-    const intervalId = setInterval(checkAssessmentStatus, 60000); // Check every minute
-    
-    return () => clearInterval(intervalId);
-  }, []);
-  
   const goals = ["Energy Boost", "Immune Support", "Muscle Recovery", "Better Sleep", "Brain Function", "Stress Management"];
   const lifestyles = ["Very Active", "Moderately Active", "Lightly Active", "Sedentary"];
   const concerns = ["Joint Pain", "Digestive Issues", "Low Energy", "Poor Sleep", "Brain Fog", "Stress", "Vitamin Deficiency"];
@@ -107,11 +86,6 @@ const AssessmentForm = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       // Submit form and navigate to results page
-      if (!canRetake) {
-        toast.error(`You can take another assessment in ${timeRemaining}`);
-        return;
-      }
-      
       navigate("/results", { state: { assessmentData: formData } });
     }
   };
@@ -173,43 +147,6 @@ const AssessmentForm = () => {
         return false;
     }
   };
-
-  if (!canRetake) {
-    return (
-      <div className="max-w-3xl mx-auto text-center">
-        <div className="bg-card border border-border rounded-xl p-8">
-          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
-            <Clock className="h-8 w-8 text-muted-foreground" />
-          </div>
-          
-          <h2 className="text-2xl font-bold mb-4">Assessment Cooldown Period</h2>
-          <p className="text-foreground/70 mb-6">
-            You've recently completed a health assessment. To ensure accuracy and prevent overassessment, 
-            you can take another assessment in:
-          </p>
-          
-          <div className="inline-flex items-center justify-center bg-muted px-6 py-3 rounded-lg text-xl font-mono font-medium mb-6">
-            {timeRemaining}
-          </div>
-          
-          <p className="text-sm text-foreground/60 mb-6">
-            This cooldown period helps ensure that your supplement recommendations remain stable 
-            and gives your body time to respond to your current plan.
-          </p>
-          
-          <div className="flex justify-center">
-            <button
-              onClick={() => navigate("/track")}
-              className="inline-flex items-center px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium"
-            >
-              View Your Current Plan
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-3xl mx-auto">

@@ -15,45 +15,14 @@ export interface AssessmentData {
   allergies?: string[];
 }
 
-// Check if assessment can be retaken
+// Check if assessment can be retaken - always returns true now as we removed the 24-hour rule
 export const canRetakeAssessment = (): boolean => {
-  const lastAssessmentTime = localStorage.getItem("lastAssessmentTime");
-  
-  if (!lastAssessmentTime) {
-    return true;
-  }
-  
-  const lastAssessment = new Date(lastAssessmentTime);
-  const now = new Date();
-  
-  // Calculate hours since last assessment
-  const hoursSinceLastAssessment = (now.getTime() - lastAssessment.getTime()) / (1000 * 60 * 60);
-  
-  // Return true if 24 hours have passed
-  return hoursSinceLastAssessment >= 24;
+  return true;
 };
 
-// Get time remaining until next assessment
+// Get time remaining until next assessment - not needed anymore, but kept for compatibility
 export const getTimeUntilNextAssessment = (): string => {
-  const lastAssessmentTime = localStorage.getItem("lastAssessmentTime");
-  
-  if (!lastAssessmentTime) {
-    return "now";
-  }
-  
-  const lastAssessment = new Date(lastAssessmentTime);
-  const nextAssessment = new Date(lastAssessment.getTime() + (24 * 60 * 60 * 1000));
-  const now = new Date();
-  
-  if (now >= nextAssessment) {
-    return "now";
-  }
-  
-  const timeRemaining = nextAssessment.getTime() - now.getTime();
-  const hoursRemaining = Math.floor(timeRemaining / (1000 * 60 * 60));
-  const minutesRemaining = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-  
-  return `${hoursRemaining}h ${minutesRemaining}m`;
+  return "now";
 };
 
 // AI recommendation engine (simulated)

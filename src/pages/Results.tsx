@@ -6,7 +6,7 @@ import { ArrowRight, BookOpen, BookmarkCheck } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import SupplementCard from "@/components/SupplementCard";
 import AiExplanation from "@/components/AiExplanation";
-import { getRecommendedSupplementsForUser } from "@/lib/ai-recommender";
+import { getRecommendedSupplementsForUser, saveUserSupplements } from "@/lib/ai-recommender";
 import { Supplement } from "@/lib/supplements";
 import { cn } from "@/lib/utils";
 
@@ -25,10 +25,6 @@ const Results = () => {
       navigate("/assessment");
       return;
     }
-
-    // Store assessment timestamp in localStorage
-    const now = new Date().toISOString();
-    localStorage.setItem("lastAssessmentTime", now);
     
     // Fetch personalized recommendations
     const fetchRecommendations = async () => {
@@ -42,7 +38,7 @@ const Results = () => {
         // Add all recommended supplements to the user's plan
         const supplementIds = recommendedSupplements.map(s => s.id);
         setAddedSupplements(supplementIds);
-        localStorage.setItem("userSupplements", JSON.stringify(supplementIds));
+        saveUserSupplements(supplementIds);
         
         setLoading(false);
       } catch (error) {
@@ -60,7 +56,7 @@ const Results = () => {
   const handleAddSupplement = (id: string) => {
     setAddedSupplements(prev => {
       const updated = [...prev, id];
-      localStorage.setItem("userSupplements", JSON.stringify(updated));
+      saveUserSupplements(updated);
       return updated;
     });
   };
@@ -68,7 +64,7 @@ const Results = () => {
   const handleRemoveSupplement = (id: string) => {
     setAddedSupplements(prev => {
       const updated = prev.filter(item => item !== id);
-      localStorage.setItem("userSupplements", JSON.stringify(updated));
+      saveUserSupplements(updated);
       return updated;
     });
   };
