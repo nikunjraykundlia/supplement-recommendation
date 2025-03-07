@@ -1,17 +1,13 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Clock, ArrowRight } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import ProgressTracker from "@/components/ProgressTracker";
-import CalendarView from "@/components/CalendarView";
 import ResearchCitation from "@/components/ResearchCitation";
-import WeeklyCompliance from "@/components/WeeklyCompliance";
+import CombinedTracker from "@/components/CombinedTracker";
+import SupplementResearch from "@/components/SupplementResearch";
 import { getSupplementsByIds, Supplement } from "@/lib/supplements";
 import { getUserSupplements, canRetakeAssessment, getTimeUntilNextAssessment } from "@/lib/ai-recommender";
-import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Track = () => {
   const { user } = useAuth();
@@ -67,28 +63,17 @@ const Track = () => {
             <ResearchCitation />
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            <div className="lg:col-span-2 animate-slide-in-left animation-delay-200">
-              <Tabs defaultValue="weekly" className="">
-                <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-6">
-                  <TabsTrigger value="weekly">Weekly View</TabsTrigger>
-                  <TabsTrigger value="calendar">Calendar View</TabsTrigger>
-                </TabsList>
-                <TabsContent value="weekly">
-                  <ProgressTracker />
-                </TabsContent>
-                <TabsContent value="calendar">
-                  <CalendarView />
-                </TabsContent>
-              </Tabs>
-            </div>
-            
-            <div className="animate-slide-in-right animation-delay-300">
-              <WeeklyCompliance />
+          <div className="grid grid-cols-1 gap-8 mb-8">
+            <div className="animate-slide-in-left animation-delay-200">
+              <CombinedTracker />
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 animate-slide-in-right animation-delay-300">
+            <SupplementResearch />
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
             <div className="lg:col-span-3 animate-slide-in-right animation-delay-300">
               <div className="bg-card p-6 rounded-xl border border-border h-full">
                 <h3 className="text-xl font-bold mb-6">Your Current Plan</h3>

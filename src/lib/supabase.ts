@@ -70,7 +70,7 @@ export const getSession = async () => {
   return data.session
 }
 
-// Add social login methods with better error handling
+// Add only Google social login method with better error handling
 export const signInWithGoogle = async () => {
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -94,60 +94,6 @@ export const signInWithGoogle = async () => {
   } catch (error: any) {
     console.error('Google sign-in error:', error)
     toast.error(error.message || 'Failed to sign in with Google')
-    throw error
-  }
-}
-
-export const signInWithTwitter = async () => {
-  try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'twitter',
-      options: {
-        redirectTo: window.location.origin + '/dashboard'
-      }
-    })
-    
-    if (error) {
-      // Handle the "provider not enabled" error more gracefully
-      if (error.message.includes('provider is not enabled')) {
-        toast.error('Twitter login is not enabled. Please enable it in your Supabase project settings.')
-        console.error('You need to enable Twitter provider in Supabase Authentication settings')
-      } else {
-        throw error
-      }
-    }
-    
-    return data
-  } catch (error: any) {
-    console.error('Twitter sign-in error:', error)
-    toast.error(error.message || 'Failed to sign in with Twitter')
-    throw error
-  }
-}
-
-export const signInWithGithub = async () => {
-  try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'github',
-      options: {
-        redirectTo: window.location.origin + '/dashboard'
-      }
-    })
-    
-    if (error) {
-      // Handle the "provider not enabled" error more gracefully
-      if (error.message.includes('provider is not enabled')) {
-        toast.error('GitHub login is not enabled. Please enable it in your Supabase project settings.')
-        console.error('You need to enable GitHub provider in Supabase Authentication settings')
-      } else {
-        throw error
-      }
-    }
-    
-    return data
-  } catch (error: any) {
-    console.error('GitHub sign-in error:', error)
-    toast.error(error.message || 'Failed to sign in with GitHub')
     throw error
   }
 }
