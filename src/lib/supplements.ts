@@ -1,4 +1,3 @@
-
 export interface Supplement {
   id: string;
   name: string;
@@ -165,7 +164,6 @@ export const supplements: Supplement[] = [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5664031/"
     ]
   },
-  // Adding five new supplements
   {
     id: "ashwagandha",
     name: "Ashwagandha",
@@ -260,6 +258,101 @@ export const supplements: Supplement[] = [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6587018/",
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4377376/"
     ]
+  },
+  {
+    id: "melatonin",
+    name: "Melatonin",
+    category: "Sleep Aid",
+    description: "Natural hormone that regulates sleep-wake cycle and supports quality sleep.",
+    benefits: [
+      "Promotes faster sleep onset",
+      "Helps regulate sleep-wake cycles",
+      "May improve overall sleep quality"
+    ],
+    dosage: "1-3mg before bedtime",
+    timing: "30-60 minutes before sleep",
+    imageUrl: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6057895/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5409706/"
+    ]
+  },
+  {
+    id: "collagen-peptides",
+    name: "Collagen Peptides",
+    category: "Structural Protein",
+    description: "Supports skin elasticity, joint health, and connective tissues.",
+    benefits: [
+      "Promotes skin elasticity and hydration",
+      "Supports joint health and mobility",
+      "May strengthen hair and nails"
+    ],
+    dosage: "10-20g daily",
+    timing: "Any time of day, consistently",
+    imageUrl: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6835901/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6891674/"
+    ]
+  },
+  {
+    id: "nac",
+    name: "N-Acetyl Cysteine (NAC)",
+    category: "Amino Acid",
+    description: "Powerful antioxidant that supports respiratory health and detoxification.",
+    benefits: [
+      "Supports respiratory health",
+      "Promotes liver detoxification",
+      "Acts as a precursor to glutathione, a master antioxidant"
+    ],
+    dosage: "600-1200mg daily",
+    timing: "With or without food",
+    imageUrl: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6562654/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5241507/"
+    ]
+  },
+  {
+    id: "lions-mane",
+    name: "Lion's Mane Mushroom",
+    category: "Medicinal Mushroom",
+    description: "Cognitive-enhancing fungus that supports brain health and nervous system function.",
+    benefits: [
+      "Supports cognitive function and memory",
+      "May promote nerve growth factor production",
+      "Provides neuroprotective properties"
+    ],
+    dosage: "500-1000mg daily",
+    timing: "Morning or afternoon with food",
+    imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6438434/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5987239/"
+    ]
+  },
+  {
+    id: "resveratrol",
+    name: "Resveratrol",
+    category: "Polyphenol",
+    description: "Plant compound with antioxidant properties that may promote longevity and cardiovascular health.",
+    benefits: [
+      "Supports cardiovascular health",
+      "Provides antioxidant protection",
+      "May activate longevity genes"
+    ],
+    dosage: "150-500mg daily",
+    timing: "With meals",
+    imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6164842/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4030174/"
+    ]
   }
 ];
 
@@ -275,7 +368,6 @@ export const getSupplementById = (id: string): Supplement | undefined => {
   return supplements.find(supplement => supplement.id === id);
 };
 
-// Get supplements by IDs
 export const getSupplementsByIds = (ids: string[]): Supplement[] => {
   return supplements.filter(supplement => ids.includes(supplement.id));
 };

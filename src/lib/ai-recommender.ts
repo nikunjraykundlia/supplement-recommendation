@@ -16,6 +16,10 @@ export interface AssessmentData {
   stressLevel?: string;
   sleepQuality?: string;
   energyLevel?: string;
+  // New fields for specialized questions
+  skinConcerns?: string[];
+  cognitiveGoals?: string[];
+  respiratoryIssues?: string[];
 }
 
 // Get time since assessment (for weekly assessment score)

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, ChevronRight, ArrowRight } from "lucide-react";
@@ -75,9 +74,11 @@ const AssessmentForm = () => {
     stressLevel: "",
     sleepQuality: "",
     energyLevel: "",
+    skinConcerns: [] as string[],
+    cognitiveGoals: [] as string[],
+    respiratoryIssues: [] as string[],
   });
   
-  // Expanded list of goals
   const goals = [
     "Energy Boost", 
     "Immune Support", 
@@ -86,13 +87,14 @@ const AssessmentForm = () => {
     "Brain Function", 
     "Stress Management", 
     "Metabolic Health", 
-    "Heart Health"
+    "Heart Health",
+    "Skin Health",
+    "Longevity",
+    "Respiratory Health"
   ];
   
-  // Expanded list of lifestyles
   const lifestyles = ["Very Active", "Moderately Active", "Lightly Active", "Sedentary"];
   
-  // Expanded list of concerns
   const concerns = [
     "Joint Pain", 
     "Digestive Issues", 
@@ -103,10 +105,11 @@ const AssessmentForm = () => {
     "Vitamin Deficiency", 
     "Blood Sugar Issues", 
     "Heart Health Concerns", 
-    "Anxiety"
+    "Anxiety",
+    "Respiratory Issues",
+    "Aging Concerns"
   ];
   
-  // Expanded list of deficiencies
   const deficiencies = [
     "Iron", 
     "Vitamin D", 
@@ -116,22 +119,28 @@ const AssessmentForm = () => {
     "Omega-3", 
     "Calcium", 
     "Vitamin K", 
-    "CoQ10"
+    "CoQ10",
+    "Antioxidants",
+    "Collagen"
   ];
   
   const dietaryPreferences = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "No Restrictions"];
   
-  // New lists for additional questions
   const stressLevels = ["Low", "Moderate", "High", "Very High"];
   const sleepQualities = ["Excellent", "Good", "Fair", "Poor"];
   const energyLevels = ["High Throughout Day", "Good, With Afternoon Slump", "Low", "Very Low"];
   
+  const skinConcerns = ["Aging/Wrinkles", "Dryness", "Elasticity Loss", "None"];
+  
+  const cognitiveGoals = ["Memory Enhancement", "Focus Improvement", "Neuroprotection", "None"];
+  
+  const respiratoryIssues = ["Frequent Colds", "Seasonal Allergies", "Asthma", "None"];
+  
   const handleNextStep = () => {
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // Submit form and navigate to results page
       navigate("/results", { state: { assessmentData: formData } });
     }
   };
@@ -179,6 +188,33 @@ const AssessmentForm = () => {
     });
   };
   
+  const toggleSkinConcern = (concern: string) => {
+    setFormData(prev => {
+      const newConcerns = prev.skinConcerns.includes(concern)
+        ? prev.skinConcerns.filter(c => c !== concern)
+        : [...prev.skinConcerns, concern];
+      return { ...prev, skinConcerns: newConcerns };
+    });
+  };
+  
+  const toggleCognitiveGoal = (goal: string) => {
+    setFormData(prev => {
+      const newGoals = prev.cognitiveGoals.includes(goal)
+        ? prev.cognitiveGoals.filter(g => g !== goal)
+        : [...prev.cognitiveGoals, goal];
+      return { ...prev, cognitiveGoals: newGoals };
+    });
+  };
+  
+  const toggleRespiratoryIssue = (issue: string) => {
+    setFormData(prev => {
+      const newIssues = prev.respiratoryIssues.includes(issue)
+        ? prev.respiratoryIssues.filter(i => i !== issue)
+        : [...prev.respiratoryIssues, issue];
+      return { ...prev, respiratoryIssues: newIssues };
+    });
+  };
+  
   const isStepComplete = (step: number) => {
     switch (step) {
       case 1:
@@ -188,13 +224,23 @@ const AssessmentForm = () => {
       case 3:
         return formData.concerns.length > 0;
       case 4:
-        return true; // Optional step
+        return true;
       case 5:
-        return true; // New optional step
+        return true;
+      case 6:
+        return true;
       default:
         return false;
     }
   };
+
+  const shouldShowSkinQuestions = formData.goals.includes("Skin Health") || 
+                                formData.concerns.includes("Aging Concerns");
+  
+  const shouldShowCognitiveQuestions = formData.goals.includes("Brain Function") || 
+                                     formData.concerns.includes("Brain Fog");
+  
+  const shouldShowRespiratoryQuestions = formData.concerns.includes("Respiratory Issues");
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -400,6 +446,80 @@ const AssessmentForm = () => {
             </div>
           </div>
         </Step>
+        
+        <Step
+          title="Specialized Needs"
+          description="Tell us about any specialized health concerns"
+          isActive={currentStep === 6}
+          isCompleted={currentStep > 6}
+          stepNumber={6}
+        >
+          <div className="space-y-6">
+            {shouldShowSkinQuestions && (
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Do you have any specific skin concerns? (Select all that apply)
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {skinConcerns.map((concern) => (
+                    <OptionButton
+                      key={concern}
+                      selected={formData.skinConcerns.includes(concern)}
+                      onClick={() => toggleSkinConcern(concern)}
+                    >
+                      {concern}
+                    </OptionButton>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {shouldShowCognitiveQuestions && (
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  What are your cognitive health goals? (Select all that apply)
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {cognitiveGoals.map((goal) => (
+                    <OptionButton
+                      key={goal}
+                      selected={formData.cognitiveGoals.includes(goal)}
+                      onClick={() => toggleCognitiveGoal(goal)}
+                    >
+                      {goal}
+                    </OptionButton>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {shouldShowRespiratoryQuestions && (
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Do you experience any respiratory issues? (Select all that apply)
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {respiratoryIssues.map((issue) => (
+                    <OptionButton
+                      key={issue}
+                      selected={formData.respiratoryIssues.includes(issue)}
+                      onClick={() => toggleRespiratoryIssue(issue)}
+                    >
+                      {issue}
+                    </OptionButton>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {!shouldShowSkinQuestions && !shouldShowCognitiveQuestions && !shouldShowRespiratoryQuestions && (
+              <div className="text-center p-4">
+                <p>No specialized questions needed based on your previous selections.</p>
+                <p className="text-muted-foreground mt-2">You can continue to your recommendations.</p>
+              </div>
+            )}
+          </div>
+        </Step>
       </div>
       
       <div className="mt-12 flex justify-between">
@@ -427,7 +547,7 @@ const AssessmentForm = () => {
               : "bg-muted text-muted-foreground cursor-not-allowed"
           )}
         >
-          {currentStep < 5 ? (
+          {currentStep < 6 ? (
             <>
               Next Step
               <ChevronRight className="w-5 h-5 ml-1" />
