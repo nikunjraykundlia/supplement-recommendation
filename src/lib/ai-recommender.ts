@@ -291,6 +291,11 @@ export const saveUserSupplements = (supplementIds: string[]): void => {
   localStorage.setItem("userSupplements", JSON.stringify(supplementIds));
 };
 
+// Get supplements by IDs - This function was missing and needed to be exported
+export const getSupplementsByIds = (ids: string[]): Supplement[] => {
+  return supplements.filter(supplement => ids.includes(supplement.id));
+};
+
 // Record supplement intake
 export const recordSupplementIntake = (supplementId: string, date: string, taken: boolean, timeOfDay: string): void => {
   // Get existing records
