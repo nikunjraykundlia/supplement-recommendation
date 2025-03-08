@@ -1,21 +1,24 @@
 
-import { useState } from "react";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay } from "date-fns";
+import { useState, useEffect } from "react";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay, addDays, subDays, subWeeks } from "date-fns";
 import { Calendar, Clock, ArrowRight, LineChart, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import CalendarView from "@/components/CalendarView";
+import { getUserSupplements, getSupplementsByIds, recordSupplementIntake, getCompletedDates, calculateWeeklyAssessmentScore } from "@/lib/ai-recommender";
+import { Supplement } from "@/lib/supplements";
+import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 
-// Mock data for the current week's intake tracking
-const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const todayIndex = new Date().getDay() - 1; // 0 = Monday in our array
-const mockIntakeData = weekDays.map((day, index) => ({
-  day,
-  morning: index <= todayIndex ? Math.random() > 0.2 : null,
-  evening: index <= todayIndex ? Math.random() > 0.3 : null,
-  isFuture: index > todayIndex,
-  isToday: index === todayIndex
-}));
+// Define WeekDay interface for tracking intake
+interface WeekDay {
+  date: Date;
+  day: string;
+  morning: boolean | null;
+  evening: boolean | null;
+  isFuture: boolean;
+  isToday: boolean;
+}
 
 interface IntakeButtonProps {
   taken: boolean | null;
@@ -42,59 +45,208 @@ const IntakeButton = ({ taken, disabled = false, onClick }: IntakeButtonProps) =
 );
 
 const CombinedTracker = () => {
-  const [intakeData, setIntakeData] = useState(mockIntakeData);
+  const [intakeData, setIntakeData] = useState<WeekDay[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [markedDates, setMarkedDates] = useState<Date[]>([]);
+  const [userSupplements, setUserSupplements] = useState<Supplement[]>([]);
+  const [complianceScore, setComplianceScore] = useState<number>(0);
   
-  // Generate mock marked dates for the past 2 weeks
-  useState(() => {
+  // Initialize data on component mount
+  useEffect(() => {
+    loadUserSupplements();
+    loadWeekData();
+    loadCompletedDates();
+    calculateScore();
+  }, []);
+  
+  // Load user's supplements
+  const loadUserSupplements = () => {
+    const supplementIds = getUserSupplements();
+    const supplements = getSupplementsByIds(supplementIds);
+    setUserSupplements(supplements);
+  };
+  
+  // Calculate and set the weekly assessment score
+  const calculateScore = () => {
+    const score = calculateWeeklyAssessmentScore();
+    setComplianceScore(score);
+  };
+  
+  // Load the week's intake data
+  const loadWeekData = () => {
+    // Get the start of the week (Monday)
     const today = new Date();
-    const dates: Date[] = [];
-    for (let i = 1; i <= 14; i++) {
-      if (Math.random() > 0.3) {
-        const date = new Date();
-        date.setDate(today.getDate() - i);
-        dates.push(date);
+    const dayOfWeek = today.getDay(); // 0 is Sunday, 1 is Monday, etc.
+    const startOfWeek = subDays(today, dayOfWeek === 0 ? 6 : dayOfWeek - 1);
+    
+    const weekdays: WeekDay[] = Array.from({ length: 7 }, (_, i) => {
+      const date = addDays(startOfWeek, i);
+      const dayName = format(date, 'EEE');
+      const isToday = isSameDay(date, today);
+      const isFuture = date > today;
+      
+      // Get saved intake data from localStorage
+      let morning: boolean | null = null;
+      let evening: boolean | null = null;
+      
+      const supplementIds = getUserSupplements();
+      const dateString = format(date, 'yyyy-MM-dd');
+      
+      // Check localStorage for intake records
+      const records = localStorage.getItem("supplementIntakeRecords");
+      if (records) {
+        const parsedRecords = JSON.parse(records);
+        
+        // For simplicity, consider all supplements marked as taken if any is recorded as taken
+        const morningRecord = parsedRecords.find((r: any) => 
+          r.date === dateString && r.timeOfDay === 'morning' && supplementIds.includes(r.supplementId)
+        );
+        
+        const eveningRecord = parsedRecords.find((r: any) => 
+          r.date === dateString && r.timeOfDay === 'evening' && supplementIds.includes(r.supplementId)
+        );
+        
+        morning = morningRecord ? morningRecord.taken : null;
+        evening = eveningRecord ? eveningRecord.taken : null;
       }
-    }
-    setMarkedDates(dates);
-  });
+      
+      return {
+        date,
+        day: dayName,
+        morning,
+        evening,
+        isFuture,
+        isToday
+      };
+    });
+    
+    setIntakeData(weekdays);
+  };
   
+  // Load dates where all supplements were taken
+  const loadCompletedDates = () => {
+    const completedDates = getCompletedDates();
+    setMarkedDates(completedDates);
+  };
+  
+  // Toggle intake status for a day and time
   const toggleIntake = (dayIndex: number, timeOfDay: 'morning' | 'evening') => {
     const newData = [...intakeData];
     const currentValue = newData[dayIndex][timeOfDay];
+    const day = newData[dayIndex];
     
     // Only allow toggling if the day is not in the future
-    if (!newData[dayIndex].isFuture) {
+    if (!day.isFuture) {
       // If null, set to true, if true, set to false, if false, set to true
-      newData[dayIndex][timeOfDay] = currentValue === null ? true : !currentValue;
+      const newValue = currentValue === null ? true : !currentValue;
+      newData[dayIndex][timeOfDay] = newValue;
       setIntakeData(newData);
+      
+      // Save to localStorage for each supplement
+      const supplementIds = getUserSupplements();
+      const dateString = format(day.date, 'yyyy-MM-dd');
+      
+      supplementIds.forEach(supplementId => {
+        recordSupplementIntake(supplementId, dateString, newValue, timeOfDay);
+      });
+      
+      // Update marked dates
+      loadCompletedDates();
+      
+      // Recalculate compliance score
+      calculateScore();
+      
+      // Show toast notification
+      toast.success(`${format(day.date, 'EEE')} ${timeOfDay} supplements marked as ${newValue ? 'taken' : 'not taken'}`);
     }
   };
   
+  // Handle selecting a date on the calendar
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
-    // Here you would typically fetch data for the selected date
-    console.log("Selected date:", format(date, 'yyyy-MM-dd'));
-  };
-  
-  const handleDayClick = (date: Date) => {
-    // Add logic to handle clicking on a specific day in the calendar
-    console.log("Clicked on date:", format(date, 'yyyy-MM-dd'));
     
-    // Toggle marked status for this date
-    if (markedDates.some(d => isSameDay(d, date))) {
-      setMarkedDates(markedDates.filter(d => !isSameDay(d, date)));
+    // Update the selected date's intake status in the calendar
+    const dateString = format(date, 'yyyy-MM-dd');
+    const supplementIds = getUserSupplements();
+    
+    // Check if this date is already marked
+    const isMarked = markedDates.some(d => isSameDay(d, date));
+    
+    if (!isMarked) {
+      // Mark all supplements as taken for this date
+      supplementIds.forEach(supplementId => {
+        recordSupplementIntake(supplementId, dateString, true, 'morning');
+        recordSupplementIntake(supplementId, dateString, true, 'evening');
+      });
+      
+      // Update marked dates
+      loadCompletedDates();
+      
+      // Update week data if the selected date is in the current week
+      const today = new Date();
+      const startOfWeek = subWeeks(today, 0);
+      const endOfWeek = addDays(startOfWeek, 6);
+      
+      if (date >= startOfWeek && date <= endOfWeek) {
+        loadWeekData();
+      }
+      
+      // Recalculate compliance score
+      calculateScore();
+      
+      toast.success(`${format(date, 'MMM d')} marked as completed`);
     } else {
-      setMarkedDates([...markedDates, date]);
+      // Unmark this date
+      supplementIds.forEach(supplementId => {
+        recordSupplementIntake(supplementId, dateString, false, 'morning');
+        recordSupplementIntake(supplementId, dateString, false, 'evening');
+      });
+      
+      // Update marked dates
+      loadCompletedDates();
+      
+      // Update week data if the selected date is in the current week
+      const today = new Date();
+      const startOfWeek = subWeeks(today, 0);
+      const endOfWeek = addDays(startOfWeek, 6);
+      
+      if (date >= startOfWeek && date <= endOfWeek) {
+        loadWeekData();
+      }
+      
+      // Recalculate compliance score
+      calculateScore();
+      
+      toast.success(`${format(date, 'MMM d')} marked as incomplete`);
     }
   };
   
   return (
     <div className="space-y-6">
+      {/* Weekly Assessment Score */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-xl font-bold">Supplement Intake Tracker</CardTitle>
+          <CardTitle className="text-xl font-bold">Weekly Compliance Score</CardTitle>
+          <div className="text-lg font-semibold">{complianceScore}%</div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <Progress value={complianceScore} className="h-2.5" />
+            <p className="text-sm text-muted-foreground">
+              {complianceScore >= 80 
+                ? "Excellent! You're staying consistent with your supplement routine."
+                : complianceScore >= 50
+                ? "Good progress. Keep working on consistency."
+                : "You're just getting started. Try to be more consistent with your supplements."}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Supplement Intake Tracker */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-xl font-bold">Daily Supplement Tracker</CardTitle>
           <div className="flex items-center gap-2 text-sm text-foreground/70">
             <Calendar className="h-4 w-4" />
             <span>This Week</span>
@@ -125,7 +277,7 @@ const CombinedTracker = () => {
                           day.isToday ? "font-medium" : "",
                           day.isFuture ? "text-foreground/50" : ""
                         )}>
-                          {day.day}
+                          {day.day} {format(day.date, 'M/d')}
                         </span>
                       </div>
                     </td>
@@ -156,7 +308,7 @@ const CombinedTracker = () => {
           <div className="mt-6 flex items-center justify-between text-xs text-foreground/70">
             <div className="flex items-center gap-1">
               <LineChart className="h-3 w-3" />
-              <span>Tracking started on Monday</span>
+              <span>Tracking started when you first took the assessment</span>
             </div>
           </div>
         </CardContent>

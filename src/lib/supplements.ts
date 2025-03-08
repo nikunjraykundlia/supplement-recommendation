@@ -9,6 +9,7 @@ export interface Supplement {
   timing: string;
   imageUrl: string;
   recommended: boolean;
+  scientific_references?: string[];
 }
 
 export const supplements: Supplement[] = [
@@ -25,7 +26,11 @@ export const supplements: Supplement[] = [
     dosage: "2000 IU daily",
     timing: "Morning with food",
     imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    recommended: true
+    recommended: true,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6121423/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7281985/"
+    ]
   },
   {
     id: "magnesium-glycinate",
@@ -40,7 +45,11 @@ export const supplements: Supplement[] = [
     dosage: "400mg daily",
     timing: "Evening before bed",
     imageUrl: "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    recommended: true
+    recommended: true,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5637834/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6024559/"
+    ]
   },
   {
     id: "omega-3",
@@ -55,7 +64,11 @@ export const supplements: Supplement[] = [
     dosage: "1000mg daily",
     timing: "With meals",
     imageUrl: "https://images.unsplash.com/photo-1535185384036-28bbc8035f28?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    recommended: true
+    recommended: true,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3262608/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4153275/"
+    ]
   },
   {
     id: "vitamin-b-complex",
@@ -70,7 +83,11 @@ export const supplements: Supplement[] = [
     dosage: "1 capsule daily",
     timing: "Morning with breakfast",
     imageUrl: "https://images.unsplash.com/photo-1550572017-edd951b55104?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    recommended: false
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4772032/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6930825/"
+    ]
   },
   {
     id: "zinc",
@@ -85,7 +102,11 @@ export const supplements: Supplement[] = [
     dosage: "15mg daily",
     timing: "With food",
     imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    recommended: false
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2820120/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6370289/"
+    ]
   },
   {
     id: "probiotics",
@@ -100,7 +121,11 @@ export const supplements: Supplement[] = [
     dosage: "10 billion CFU daily",
     timing: "Morning before breakfast",
     imageUrl: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    recommended: false
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6340058/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6306248/"
+    ]
   },
   {
     id: "vitamin-c",
@@ -115,7 +140,11 @@ export const supplements: Supplement[] = [
     dosage: "500-1000mg daily",
     timing: "Throughout the day with meals",
     imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    recommended: false
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5707683/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6099636/"
+    ]
   },
   {
     id: "turmeric",
@@ -130,7 +159,107 @@ export const supplements: Supplement[] = [
     dosage: "500-1000mg daily",
     timing: "With food containing some fat",
     imageUrl: "https://images.unsplash.com/photo-1615485500704-8e990f9900e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    recommended: false
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5664031/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5664031/"
+    ]
+  },
+  // Adding five new supplements
+  {
+    id: "ashwagandha",
+    name: "Ashwagandha",
+    category: "Adaptogen",
+    description: "Ayurvedic herb that helps the body manage stress and anxiety.",
+    benefits: [
+      "Reduces cortisol levels and stress",
+      "May improve sleep quality",
+      "Supports adrenal function and energy levels"
+    ],
+    dosage: "300-500mg daily",
+    timing: "Morning or evening",
+    imageUrl: "https://images.unsplash.com/photo-1611075384322-404243d037c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6979308/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6750292/"
+    ]
+  },
+  {
+    id: "coq10",
+    name: "Coenzyme Q10",
+    category: "Antioxidant",
+    description: "Natural antioxidant that helps generate energy in cells.",
+    benefits: [
+      "Supports cellular energy production",
+      "Acts as an antioxidant",
+      "May support heart health"
+    ],
+    dosage: "100-200mg daily",
+    timing: "With a meal containing fat",
+    imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6131403/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5807419/"
+    ]
+  },
+  {
+    id: "vitamin-k2",
+    name: "Vitamin K2",
+    category: "Vitamin",
+    description: "Essential for proper calcium utilization and bone health.",
+    benefits: [
+      "Directs calcium to bones instead of arteries",
+      "Supports heart health",
+      "Works synergistically with vitamin D3"
+    ],
+    dosage: "100-200mcg daily",
+    timing: "With food containing fat",
+    imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4566462/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5494092/"
+    ]
+  },
+  {
+    id: "l-theanine",
+    name: "L-Theanine",
+    category: "Amino Acid",
+    description: "Natural compound found in tea leaves that promotes relaxation without drowsiness.",
+    benefits: [
+      "Promotes relaxation and reduces stress",
+      "Improves focus when combined with caffeine",
+      "May support better sleep quality"
+    ],
+    dosage: "200-400mg daily",
+    timing: "Morning or evening",
+    imageUrl: "https://images.unsplash.com/photo-1546430783-fe4b9c159e52?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6836118/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4787341/"
+    ]
+  },
+  {
+    id: "berberine",
+    name: "Berberine",
+    category: "Herbal",
+    description: "Plant compound that has powerful effects on metabolic health.",
+    benefits: [
+      "Supports healthy blood sugar levels",
+      "May improve cholesterol and triglyceride levels",
+      "Supports gut health"
+    ],
+    dosage: "500mg 2-3 times daily",
+    timing: "Before meals",
+    imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6587018/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4377376/"
+    ]
   }
 ];
 

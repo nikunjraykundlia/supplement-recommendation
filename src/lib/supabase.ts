@@ -70,13 +70,18 @@ export const getSession = async () => {
   return data.session
 }
 
-// Add only Google social login method with better error handling
+// Modified Google social login to fix redirect URL issues
 export const signInWithGoogle = async () => {
   try {
+    // Using the production URL for redirects
+    const redirectTo = window.location.hostname.includes('localhost') 
+      ? `${window.location.origin}/dashboard` 
+      : 'https://supplement-recommendation.lovable.app/dashboard';
+      
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin + '/dashboard'
+        redirectTo: redirectTo
       }
     })
     

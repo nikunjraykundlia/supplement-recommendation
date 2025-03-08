@@ -72,16 +72,62 @@ const AssessmentForm = () => {
     concerns: [] as string[],
     deficiencies: [] as string[],
     dietaryPreferences: [] as string[],
+    stressLevel: "",
+    sleepQuality: "",
+    energyLevel: "",
   });
   
-  const goals = ["Energy Boost", "Immune Support", "Muscle Recovery", "Better Sleep", "Brain Function", "Stress Management"];
+  // Expanded list of goals
+  const goals = [
+    "Energy Boost", 
+    "Immune Support", 
+    "Muscle Recovery", 
+    "Better Sleep", 
+    "Brain Function", 
+    "Stress Management", 
+    "Metabolic Health", 
+    "Heart Health"
+  ];
+  
+  // Expanded list of lifestyles
   const lifestyles = ["Very Active", "Moderately Active", "Lightly Active", "Sedentary"];
-  const concerns = ["Joint Pain", "Digestive Issues", "Low Energy", "Poor Sleep", "Brain Fog", "Stress", "Vitamin Deficiency"];
-  const deficiencies = ["Iron", "Vitamin D", "Magnesium", "Zinc", "Vitamin B12", "Omega-3", "Calcium"];
+  
+  // Expanded list of concerns
+  const concerns = [
+    "Joint Pain", 
+    "Digestive Issues", 
+    "Low Energy", 
+    "Poor Sleep", 
+    "Brain Fog", 
+    "Stress", 
+    "Vitamin Deficiency", 
+    "Blood Sugar Issues", 
+    "Heart Health Concerns", 
+    "Anxiety"
+  ];
+  
+  // Expanded list of deficiencies
+  const deficiencies = [
+    "Iron", 
+    "Vitamin D", 
+    "Magnesium", 
+    "Zinc", 
+    "Vitamin B12", 
+    "Omega-3", 
+    "Calcium", 
+    "Vitamin K", 
+    "CoQ10"
+  ];
+  
   const dietaryPreferences = ["Vegan", "Vegetarian", "Keto", "Paleo", "Gluten-Free", "Dairy-Free", "No Restrictions"];
   
+  // New lists for additional questions
+  const stressLevels = ["Low", "Moderate", "High", "Very High"];
+  const sleepQualities = ["Excellent", "Good", "Fair", "Poor"];
+  const energyLevels = ["High Throughout Day", "Good, With Afternoon Slump", "Low", "Very Low"];
+  
   const handleNextStep = () => {
-    if (currentStep < 4) {
+    if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -143,6 +189,8 @@ const AssessmentForm = () => {
         return formData.concerns.length > 0;
       case 4:
         return true; // Optional step
+      case 5:
+        return true; // New optional step
       default:
         return false;
     }
@@ -218,6 +266,23 @@ const AssessmentForm = () => {
                 ))}
               </div>
             </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                How would you rate your current stress level?
+              </label>
+              <div className="space-y-3">
+                {stressLevels.map((level) => (
+                  <OptionButton
+                    key={level}
+                    selected={formData.stressLevel === level}
+                    onClick={() => setFormData({ ...formData, stressLevel: level })}
+                  >
+                    {level}
+                  </OptionButton>
+                ))}
+              </div>
+            </div>
           </div>
         </Step>
         
@@ -249,11 +314,55 @@ const AssessmentForm = () => {
         </Step>
         
         <Step
-          title="Advanced Details"
-          description="Help us further personalize your recommendations"
+          title="Nutrition & Sleep"
+          description="Tell us about your energy and sleep patterns"
           isActive={currentStep === 4}
           isCompleted={currentStep > 4}
           stepNumber={4}
+        >
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                How would you describe your current sleep quality?
+              </label>
+              <div className="space-y-3">
+                {sleepQualities.map((quality) => (
+                  <OptionButton
+                    key={quality}
+                    selected={formData.sleepQuality === quality}
+                    onClick={() => setFormData({ ...formData, sleepQuality: quality })}
+                  >
+                    {quality}
+                  </OptionButton>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                How would you describe your energy levels throughout the day?
+              </label>
+              <div className="space-y-3">
+                {energyLevels.map((level) => (
+                  <OptionButton
+                    key={level}
+                    selected={formData.energyLevel === level}
+                    onClick={() => setFormData({ ...formData, energyLevel: level })}
+                  >
+                    {level}
+                  </OptionButton>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Step>
+        
+        <Step
+          title="Advanced Details"
+          description="Help us further personalize your recommendations"
+          isActive={currentStep === 5}
+          isCompleted={currentStep > 5}
+          stepNumber={5}
         >
           <div className="space-y-6">
             <div>
@@ -318,7 +427,7 @@ const AssessmentForm = () => {
               : "bg-muted text-muted-foreground cursor-not-allowed"
           )}
         >
-          {currentStep < 4 ? (
+          {currentStep < 5 ? (
             <>
               Next Step
               <ChevronRight className="w-5 h-5 ml-1" />
