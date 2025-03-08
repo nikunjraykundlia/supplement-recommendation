@@ -74,9 +74,8 @@ export const getSession = async () => {
 export const signInWithGoogle = async () => {
   try {
     // Using the production URL for redirects
-    const redirectTo = window.location.hostname.includes('localhost') 
-      ? `${window.location.origin}/dashboard` 
-      : 'https://supplement-recommendation.lovable.app/dashboard';
+    const productionUrl = 'https://supplement-recommendation.lovable.app';
+    const redirectTo = `${productionUrl}/results`;
       
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',

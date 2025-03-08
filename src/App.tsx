@@ -45,9 +45,9 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
   
-  // If already authenticated, redirect to dashboard
+  // If already authenticated, redirect to results
   if (user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/results" replace />;
   }
   
   // If not authenticated, show the public content

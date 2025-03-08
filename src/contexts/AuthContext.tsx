@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Session, User } from '@supabase/supabase-js'
 import { supabase, getCurrentUser, getSession } from '@/lib/supabase'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 type AuthContextType = {
   session: Session | null
@@ -29,6 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (currentSession) {
           const currentUser = await getCurrentUser()
           setUser(currentUser)
+          toast.success('Successfully signed in!')
         }
       } catch (error) {
         console.error('Error loading auth context:', error)
@@ -41,17 +43,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
         setSession(session)
         setUser(session?.user || null)
         setLoading(false)
+        
+        if (event === 'SIGNED_IN') {
+          toast.success('Successfully signed in!')
+          navigate('/results')
+        }
       }
     )
 
     return () => {
       subscription.unsubscribe()
     }
-  }, [])
+  }, [navigate])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()

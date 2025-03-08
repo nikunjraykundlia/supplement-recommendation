@@ -33,7 +33,7 @@ const Login = () => {
       toast.success('Login successful!')
       
       if (user) {
-        navigate('/dashboard')
+        navigate('/results')
       }
     } catch (error: any) {
       console.error('Login error:', error)
