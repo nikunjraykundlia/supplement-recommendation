@@ -295,7 +295,7 @@ export const saveUserSupplements = (supplementIds: string[]): void => {
   localStorage.setItem("userSupplements", JSON.stringify(supplementIds));
 };
 
-// Get supplements by IDs - This function was missing and needed to be exported
+// Get supplements by IDs
 export const getSupplementsByIds = (ids: string[]): Supplement[] => {
   return supplements.filter(supplement => ids.includes(supplement.id));
 };

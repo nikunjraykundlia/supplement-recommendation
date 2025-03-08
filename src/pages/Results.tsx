@@ -35,10 +35,13 @@ const Results = () => {
         const recommendedSupplements = getRecommendedSupplementsForUser(assessmentData);
         setSupplements(recommendedSupplements);
         
-        // Add all recommended supplements to the user's plan
+        // Automatically add all recommended supplements to the user's plan
         const supplementIds = recommendedSupplements.map(s => s.id);
         setAddedSupplements(supplementIds);
         saveUserSupplements(supplementIds);
+        
+        // Show a success message to inform the user
+        toast.success("All recommended supplements have been added to your plan!");
         
         setLoading(false);
       } catch (error) {
@@ -92,6 +95,7 @@ const Results = () => {
             </h1>
             <p className="text-lg text-foreground/80 max-w-2xl mx-auto animate-fade-in animation-delay-200">
               Based on your detailed health assessment, we've created a personalized supplement plan to address your specific needs.
+              <span className="block mt-2 font-medium text-primary">All supplements have been automatically added to your plan!</span>
             </p>
             
             <div className="mt-6 flex justify-center space-x-4">
@@ -135,6 +139,7 @@ const Results = () => {
                       isAdded={addedSupplements.includes(supplement.id)}
                       onAdd={handleAddSupplement}
                       onRemove={handleRemoveSupplement}
+                      alreadyAdded={true}
                     />
                   </div>
                 ))}

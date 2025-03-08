@@ -9,16 +9,19 @@ interface SupplementCardProps {
   isAdded?: boolean;
   onAdd?: (id: string) => void;
   onRemove?: (id: string) => void;
+  alreadyAdded?: boolean;
 }
 
 const SupplementCard = ({ 
   supplement, 
   isAdded = false, 
   onAdd, 
-  onRemove 
+  onRemove,
+  alreadyAdded = false
 }: SupplementCardProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -29,6 +32,17 @@ const SupplementCard = ({
       onRemove(supplement.id);
     } else if (onAdd) {
       onAdd(supplement.id);
+    }
+  };
+
+  const handleImageError = () => {
+    setImageFailed(true);
+    // Use a backup image URL
+    const backupImage = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
+    // Update the image source directly
+    const imgElement = document.getElementById(`supp-img-${supplement.id}`) as HTMLImageElement;
+    if (imgElement) {
+      imgElement.src = backupImage;
     }
   };
 
@@ -45,6 +59,7 @@ const SupplementCard = ({
           </div>
         )}
         <img
+          id={`supp-img-${supplement.id}`}
           src={supplement.imageUrl}
           alt={supplement.name}
           className={cn(
@@ -52,6 +67,7 @@ const SupplementCard = ({
             imageLoaded ? "opacity-100" : "opacity-0"
           )}
           onLoad={() => setImageLoaded(true)}
+          onError={handleImageError}
         />
         <div className="absolute top-3 left-3 bg-card/80 backdrop-blur-sm text-xs font-medium px-2 py-1 rounded-full">
           {supplement.category}
@@ -110,17 +126,20 @@ const SupplementCard = ({
         <div className="mt-6">
           <button
             onClick={handleAddRemove}
+            disabled={alreadyAdded}
             className={cn(
               "w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full transition-all-200",
               isAdded 
-                ? "bg-accent text-foreground hover:bg-accent/80" 
+                ? alreadyAdded 
+                  ? "bg-primary/20 text-primary cursor-default" 
+                  : "bg-accent text-foreground hover:bg-accent/80"
                 : "bg-primary text-primary-foreground hover:bg-primary/90"
             )}
           >
             {isAdded ? (
               <>
                 <Check className="w-5 h-5" />
-                <span>Added to Plan</span>
+                <span>{alreadyAdded ? "Automatically Added" : "Added to Plan"}</span>
               </>
             ) : (
               <>
