@@ -1,60 +1,45 @@
-
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, Brain, Battery, Shield, Award, Beaker } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-
 const Index = () => {
   useEffect(() => {
     // Scroll to top on page load
     window.scrollTo(0, 0);
   }, []);
-
-  const features = [
-    {
-      icon: <Brain className="w-8 h-8 text-purple-500" />,
-      title: "Cognitive Enhancement",
-      description: "Formulations designed to improve focus, memory, and overall brain function."
-    },
-    {
-      icon: <Battery className="w-8 h-8 text-green-500" />,
-      title: "Energy Optimization",
-      description: "Targeted supplements that enhance cellular energy production and vitality."
-    },
-    {
-      icon: <Shield className="w-8 h-8 text-blue-500" />,
-      title: "Immune Support",
-      description: "Science-backed compounds that strengthen your body's natural defenses."
-    },
-    {
-      icon: <Sparkles className="w-8 h-8 text-amber-500" />,
-      title: "Personalized Plans",
-      description: "Custom supplement recommendations based on your unique health profile."
-    }
-  ];
-
-  const testimonials = [
-    {
-      quote: "The personalized approach to supplements changed everything for me. I've never felt better.",
-      author: "Sarah K., 34",
-      rating: 5
-    },
-    {
-      quote: "As a fitness professional, I'm extremely careful about what I put in my body. Supplement Alchemist is the gold standard.",
-      author: "Michael T., 29",
-      rating: 5
-    },
-    {
-      quote: "I appreciate the science-based approach and real research behind each recommendation.",
-      author: "Dr. Jennifer L., 42",
-      rating: 5
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-purple-50 dark:from-gray-950 dark:to-gray-900">
+  const features = [{
+    icon: <Brain className="w-8 h-8 text-purple-500" />,
+    title: "Cognitive Enhancement",
+    description: "Formulations designed to improve focus, memory, and overall brain function."
+  }, {
+    icon: <Battery className="w-8 h-8 text-green-500" />,
+    title: "Energy Optimization",
+    description: "Targeted supplements that enhance cellular energy production and vitality."
+  }, {
+    icon: <Shield className="w-8 h-8 text-blue-500" />,
+    title: "Immune Support",
+    description: "Science-backed compounds that strengthen your body's natural defenses."
+  }, {
+    icon: <Sparkles className="w-8 h-8 text-amber-500" />,
+    title: "Personalized Plans",
+    description: "Custom supplement recommendations based on your unique health profile."
+  }];
+  const testimonials = [{
+    quote: "The personalized approach to supplements changed everything for me. I've never felt better.",
+    author: "Sarah K., 34",
+    rating: 5
+  }, {
+    quote: "As a fitness professional, I'm extremely careful about what I put in my body. Supplement Alchemist is the gold standard.",
+    author: "Michael T., 29",
+    rating: 5
+  }, {
+    quote: "I appreciate the science-based approach and real research behind each recommendation.",
+    author: "Dr. Jennifer L., 42",
+    rating: 5
+  }];
+  return <div className="min-h-screen bg-gradient-to-b from-white to-purple-50 dark:from-gray-950 dark:to-gray-900">
       <Navbar />
       
       {/* Hero Section */}
@@ -96,9 +81,7 @@ const Index = () => {
               
               <div className="mt-8 flex items-center justify-center lg:justify-start space-x-2 text-sm">
                 <div className="flex -space-x-1">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className={`w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 bg-gray-${200 + (i * 100)}`}></div>
-                  ))}
+                  {[1, 2, 3, 4].map(i => <div key={i} className={`w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 bg-gray-${200 + i * 100}`}></div>)}
                 </div>
                 <span className="text-gray-600 dark:text-gray-400">
                   Join <span className="font-medium">1,200+</span> users optimizing their health
@@ -109,11 +92,7 @@ const Index = () => {
             <div className="flex-1 relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl lg:max-w-md mx-auto">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 to-indigo-600/30 mix-blend-overlay"></div>
-                <img 
-                  src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                  alt="Supplement bottles" 
-                  className="w-full"
-                />
+                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Supplement bottles" className="w-full" />
               </div>
               
               {/* Decorative elements */}
@@ -137,15 +116,7 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <div 
-                key={index} 
-                className={cn(
-                  "p-8 rounded-xl border border-gray-100 dark:border-gray-800",
-                  "bg-white dark:bg-gray-800 hover:shadow-lg transition-all duration-300",
-                  "flex flex-col items-center text-center"
-                )}
-              >
+            {features.map((feature, index) => <div key={index} className={cn("p-8 rounded-xl border border-gray-100 dark:border-gray-800", "bg-white dark:bg-gray-800 hover:shadow-lg transition-all duration-300", "flex flex-col items-center text-center")}>
                 <div className="mb-5 p-3 rounded-2xl bg-gray-50 dark:bg-gray-700">
                   {feature.icon}
                 </div>
@@ -155,8 +126,7 @@ const Index = () => {
                 <p className="text-gray-600 dark:text-gray-300">
                   {feature.description}
                 </p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -174,24 +144,19 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {[
-              {
-                step: "01",
-                title: "Complete Assessment",
-                description: "Answer questions about your health, goals, and lifestyle."
-              },
-              {
-                step: "02",
-                title: "Receive Analysis",
-                description: "Our algorithm analyzes your responses using peer-reviewed research."
-              },
-              {
-                step: "03",
-                title: "Follow Your Plan",
-                description: "Get your personalized supplement plan and track your progress."
-              }
-            ].map((item, index) => (
-              <div key={index} className="relative">
+            {[{
+            step: "01",
+            title: "Complete Assessment",
+            description: "Answer questions about your health, goals, and lifestyle."
+          }, {
+            step: "02",
+            title: "Receive Analysis",
+            description: "Our algorithm analyzes your responses using peer-reviewed research."
+          }, {
+            step: "03",
+            title: "Follow Your Plan",
+            description: "Get your personalized supplement plan and track your progress."
+          }].map((item, index) => <div key={index} className="relative">
                 <div className="p-6 rounded-xl bg-white dark:bg-gray-700 shadow-sm h-full">
                   <div className="inline-block text-sm font-semibold text-purple-600 dark:text-purple-400 mb-4">
                     {item.step}
@@ -204,13 +169,10 @@ const Index = () => {
                   </p>
                 </div>
                 
-                {index < 2 && (
-                  <div className="hidden md:block absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 z-10">
+                {index < 2 && <div className="hidden md:block absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 z-10">
                     <ArrowRight className="h-5 w-5 text-purple-500" />
-                  </div>
-                )}
-              </div>
-            ))}
+                  </div>}
+              </div>)}
           </div>
           
           <div className="text-center mt-14">
@@ -239,14 +201,11 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="p-8 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+            {testimonials.map((testimonial, index) => <div key={index} className="p-8 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
                 <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <svg key={i} className="h-5 w-5 text-amber-500 fill-current" viewBox="0 0 24 24">
+                  {[...Array(testimonial.rating)].map((_, i) => <svg key={i} className="h-5 w-5 text-amber-500 fill-current" viewBox="0 0 24 24">
                       <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                    </svg>
-                  ))}
+                    </svg>)}
                 </div>
                 <p className="text-gray-700 dark:text-gray-300 mb-6 italic">
                   "{testimonial.quote}"
@@ -254,8 +213,7 @@ const Index = () => {
                 <p className="font-medium text-gray-900 dark:text-white">
                   {testimonial.author}
                 </p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -279,7 +237,7 @@ const Index = () => {
                 </Button>
               </Link>
               <Link to="/signup">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-purple-600 w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="border-white text-white w-full sm:w-auto bg-violet-600 hover:bg-violet-500">
                   Create Account
                 </Button>
               </Link>
@@ -302,8 +260,6 @@ const Index = () => {
           </p>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
