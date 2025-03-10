@@ -34,6 +34,16 @@ const getSupplementImageUrl = (supplement: string): string => {
     "rhodiola": "https://images.unsplash.com/photo-1611930022073-84a47d8afeac?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     "spirulina": "https://images.unsplash.com/photo-1597736595206-99a8c173964f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     "alpha-lipoic-acid": "https://images.unsplash.com/photo-1585435557885-6511f1e0e3a4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "quercetin": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "selenium": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "vitamin-e": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "biotin": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "glutamine": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "iron": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "creatine": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "5-htp": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "ginger": "https://images.unsplash.com/photo-1615485500704-8e990f9900e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "msm": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
   };
 
   return defaultImages[supplement as keyof typeof defaultImages] || 
@@ -438,6 +448,196 @@ export const supplements: Supplement[] = [
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6723188/",
       "https://pubmed.ncbi.nlm.nih.gov/28809836/"
+    ]
+  },
+  {
+    id: "quercetin",
+    name: "Quercetin",
+    category: "Antioxidant",
+    description: "A plant flavonoid with anti-inflammatory and antihistamine properties.",
+    benefits: [
+      "Natural antihistamine for allergy relief",
+      "Powerful antioxidant that fights free radicals",
+      "May support cardiovascular health"
+    ],
+    dosage: "500-1000mg daily",
+    timing: "With meals",
+    imageUrl: getSupplementImageUrl("quercetin"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6273625/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7254783/"
+    ]
+  },
+  {
+    id: "selenium",
+    name: "Selenium",
+    category: "Mineral",
+    description: "Essential trace mineral important for cognitive function and immune health.",
+    benefits: [
+      "Supports thyroid function",
+      "Powerful antioxidant when combined with vitamin E",
+      "Helps maintain immune system"
+    ],
+    dosage: "50-200mcg daily",
+    timing: "With food",
+    imageUrl: getSupplementImageUrl("selenium"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6163284/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5307254/"
+    ]
+  },
+  {
+    id: "vitamin-e",
+    name: "Vitamin E",
+    category: "Vitamin",
+    description: "Fat-soluble antioxidant that protects cells from oxidative damage.",
+    benefits: [
+      "Protects cells from oxidative damage",
+      "Supports skin health",
+      "May benefit heart and blood vessel health"
+    ],
+    dosage: "15-30mg (22-45 IU) daily",
+    timing: "With a meal containing fat",
+    imageUrl: getSupplementImageUrl("vitamin-e"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6266234/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3997530/"
+    ]
+  },
+  {
+    id: "biotin",
+    name: "Biotin",
+    category: "Vitamin",
+    description: "B vitamin essential for energy metabolism and maintaining healthy hair, skin, and nails.",
+    benefits: [
+      "Supports hair, skin, and nail health",
+      "Essential for carbohydrate and fat metabolism",
+      "May help with brittle nails and hair loss"
+    ],
+    dosage: "5000mcg daily",
+    timing: "Any time of day with food",
+    imageUrl: getSupplementImageUrl("biotin"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6380979/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5582478/"
+    ]
+  },
+  {
+    id: "glutamine",
+    name: "L-Glutamine",
+    category: "Amino Acid",
+    description: "Amino acid that supports intestinal health and immune function.",
+    benefits: [
+      "Supports gut health and intestinal barrier function",
+      "Aids in muscle recovery after exercise",
+      "Supports immune system function"
+    ],
+    dosage: "5-10g daily",
+    timing: "Between meals",
+    imageUrl: getSupplementImageUrl("glutamine"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5946267/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6266414/"
+    ]
+  },
+  {
+    id: "iron",
+    name: "Iron",
+    category: "Mineral",
+    description: "Essential mineral needed for oxygen transport and energy production.",
+    benefits: [
+      "Critical for red blood cell formation and oxygen transport",
+      "Supports energy production and reduces fatigue",
+      "Essential for cognitive function"
+    ],
+    dosage: "15-45mg daily (under medical supervision)",
+    timing: "On an empty stomach with vitamin C",
+    imageUrl: getSupplementImageUrl("iron"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5986027/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6142249/"
+    ]
+  },
+  {
+    id: "creatine",
+    name: "Creatine Monohydrate",
+    category: "Performance",
+    description: "Natural compound that enhances high-intensity exercise performance and cognitive function.",
+    benefits: [
+      "Increases strength and power output",
+      "Enhances muscle recovery and growth",
+      "May support brain health and cognitive function"
+    ],
+    dosage: "3-5g daily",
+    timing: "Any time of day, consistently",
+    imageUrl: getSupplementImageUrl("creatine"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6950923/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6093191/"
+    ]
+  },
+  {
+    id: "5-htp",
+    name: "5-HTP",
+    category: "Mood Support",
+    description: "Precursor to serotonin that may help regulate mood, sleep, and appetite.",
+    benefits: [
+      "May support healthy mood and reduce symptoms of mild depression",
+      "Can improve sleep quality",
+      "May help reduce appetite and support weight management"
+    ],
+    dosage: "50-200mg daily",
+    timing: "Before bedtime",
+    imageUrl: getSupplementImageUrl("5-htp"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3415362/",
+      "https://pubmed.ncbi.nlm.nih.gov/27824481/"
+    ]
+  },
+  {
+    id: "ginger",
+    name: "Ginger Root",
+    category: "Herbal",
+    description: "Natural anti-inflammatory and digestive aid with multiple health benefits.",
+    benefits: [
+      "Reduces nausea and digestive discomfort",
+      "Has anti-inflammatory properties",
+      "May support joint health and mobility"
+    ],
+    dosage: "500-1000mg daily",
+    timing: "With meals",
+    imageUrl: getSupplementImageUrl("ginger"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6616534/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7019938/"
+    ]
+  },
+  {
+    id: "msm",
+    name: "MSM (Methylsulfonylmethane)",
+    category: "Joint Support",
+    description: "Organic sulfur compound that supports joint health and inflammation reduction.",
+    benefits: [
+      "Supports joint health and mobility",
+      "Reduces inflammation and oxidative stress",
+      "May support healthy skin, hair, and nails"
+    ],
+    dosage: "1000-3000mg daily",
+    timing: "With meals",
+    imageUrl: getSupplementImageUrl("msm"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5372953/",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4252399/"
     ]
   }
 ];

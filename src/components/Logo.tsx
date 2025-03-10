@@ -19,7 +19,7 @@ const Logo = ({ size = "md", type = "full", className }: LogoProps) => {
     return (
       <div className={cn("relative flex-shrink-0", sizeClasses[size], className)}>
         <img 
-          src="/lovable-uploads/4fd75ee2-f2b3-438a-9011-730b8efb1f43.png" 
+          src="/lovable-uploads/64eca7a3-abcd-4a73-90d5-176856b66059.png" 
           alt="Supplement Alchemist Logo" 
           className="w-full h-full object-contain"
         />
@@ -31,7 +31,7 @@ const Logo = ({ size = "md", type = "full", className }: LogoProps) => {
     <div className={cn("flex items-center", className)}>
       <div className={cn("relative flex-shrink-0", sizeClasses[size])}>
         <img 
-          src="/lovable-uploads/4fd75ee2-f2b3-438a-9011-730b8efb1f43.png" 
+          src="/lovable-uploads/64eca7a3-abcd-4a73-90d5-176856b66059.png" 
           alt="Supplement Alchemist Logo" 
           className="h-full w-auto"
         />

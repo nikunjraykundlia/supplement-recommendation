@@ -69,9 +69,9 @@ export default {
 				},
 				// Adding specific logo colors
 				logo: {
-					magenta: '#E9298F',
-					purple: '#9332C3',
-					blue: '#0E92D7',
+					magenta: '#DB2777',
+					purple: '#7928CA',
+					blue: '#2563EB',
 				}
 			},
 			borderRadius: {

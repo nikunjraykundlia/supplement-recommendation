@@ -51,8 +51,28 @@
 
 /* Gradient text utilities */
 .gradient-text {
-  background: linear-gradient(to right, #E9298F, #9332C3, #0E92D7);
+  background: linear-gradient(to right, #DB2777, #7928CA, #2563EB);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* User avatar styles */
+.avatar-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  background-color: #10B981;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.avatar-badge.offline {
+  background-color: #6B7280;
+}
+
+.avatar-badge.away {
+  background-color: #F59E0B;
 }

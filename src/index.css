@@ -19,15 +19,15 @@
     --popover-foreground: 210 30% 12%;
 
     /* Updated primary color to match magenta from logo */
-    --primary: 320 82% 54%;
+    --primary: 326 81% 50%;
     --primary-foreground: 0 0% 100%;
 
     /* Updated secondary color to match blue from logo */
-    --secondary: 199 79% 46%;
+    --secondary: 222 83% 53%;
     --secondary-foreground: 0 0% 100%;
 
     /* Updated accent to be a purple from the logo gradient */
-    --accent: 271 72% 53%;
+    --accent: 271 75% 47%;
     --accent-foreground: 0 0% 100%;
 
     --muted: 210 20% 92%;
@@ -38,13 +38,13 @@
 
     --border: 210 20% 92%;
     --input: 210 20% 88%;
-    --ring: 271 72% 53%;
+    --ring: 271 75% 47%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 320 82% 54%;
+    --sidebar-primary: 326 81% 50%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
@@ -63,15 +63,15 @@
     --popover-foreground: 210 10% 96%;
 
     /* Updated primary color to match magenta from logo */
-    --primary: 320 82% 54%;
+    --primary: 326 81% 50%;
     --primary-foreground: 0 0% 100%;
 
     /* Updated secondary color to match blue from logo */
-    --secondary: 199 79% 46%;
+    --secondary: 222 83% 53%;
     --secondary-foreground: 0 0% 100%;
 
     /* Updated accent to be a purple from the logo gradient */
-    --accent: 271 72% 53%;
+    --accent: 271 75% 47%;
     --accent-foreground: 0 0% 100%;
 
     --muted: 210 30% 20%;
@@ -82,11 +82,11 @@
 
     --border: 210 30% 25%;
     --input: 210 30% 25%;
-    --ring: 271 72% 53%;
+    --ring: 271 75% 47%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 320 82% 54%;
+    --sidebar-primary: 326 81% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
@@ -125,15 +125,15 @@
 
   /* New gradient utilities based on logo */
   .bg-logo-gradient {
-    @apply bg-gradient-to-r from-[#E9298F] via-[#9332C3] to-[#0E92D7];
+    @apply bg-gradient-to-r from-[#DB2777] via-[#7928CA] to-[#2563EB];
   }
 
   .text-logo-gradient {
-    @apply bg-gradient-to-r from-[#E9298F] via-[#9332C3] to-[#0E92D7] bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[#DB2777] via-[#7928CA] to-[#2563EB] bg-clip-text text-transparent;
   }
 
   .border-logo-gradient {
-    border-image: linear-gradient(to right, #E9298F, #9332C3, #0E92D7) 1;
+    border-image: linear-gradient(to right, #DB2777, #7928CA, #2563EB) 1;
   }
 }
 
