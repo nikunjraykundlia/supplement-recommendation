@@ -1,10 +1,11 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Beaker } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import Logo from "@/components/Logo";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,25 +52,8 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className={cn(
-              "w-10 h-10 flex items-center justify-center rounded-xl transition-colors",
-              isScrolled 
-                ? "bg-purple-600" 
-                : "bg-purple-600/90"
-            )}>
-              <div className="relative">
-                <span className="text-white font-bold text-sm">S&A</span>
-              </div>
-            </div>
-            <span className={cn(
-              "font-display font-semibold text-lg transition-colors",
-              isScrolled 
-                ? "text-gray-900 dark:text-white" 
-                : "text-gray-900 dark:text-white"
-            )}>
-              Supplement Alchemist
-            </span>
+          <Link to="/" className="flex items-center">
+            <Logo size={isScrolled ? "sm" : "md"} />
           </Link>
           
           {/* Desktop Navigation */}
@@ -79,8 +63,8 @@ const Navbar = () => {
               className={cn(
                 "text-sm font-medium transition-colors",
                 isActive("/")
-                  ? "text-purple-600 dark:text-purple-400"
-                  : "text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                  ? "text-logo-magenta dark:text-logo-magenta"
+                  : "text-gray-700 dark:text-gray-300 hover:text-logo-purple dark:hover:text-logo-purple"
               )}
             >
               Home
@@ -90,8 +74,8 @@ const Navbar = () => {
               className={cn(
                 "text-sm font-medium transition-colors",
                 isActive("/assessment")
-                  ? "text-purple-600 dark:text-purple-400"
-                  : "text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                  ? "text-logo-magenta dark:text-logo-magenta"
+                  : "text-gray-700 dark:text-gray-300 hover:text-logo-purple dark:hover:text-logo-purple"
               )}
             >
               Assessment
@@ -103,8 +87,8 @@ const Navbar = () => {
                   className={cn(
                     "text-sm font-medium transition-colors",
                     isActive("/results")
-                      ? "text-purple-600 dark:text-purple-400"
-                      : "text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                      ? "text-logo-magenta dark:text-logo-magenta"
+                      : "text-gray-700 dark:text-gray-300 hover:text-logo-purple dark:hover:text-logo-purple"
                   )}
                 >
                   Results
@@ -114,8 +98,8 @@ const Navbar = () => {
                   className={cn(
                     "text-sm font-medium transition-colors",
                     isActive("/dashboard")
-                      ? "text-purple-600 dark:text-purple-400"
-                      : "text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                      ? "text-logo-magenta dark:text-logo-magenta"
+                      : "text-gray-700 dark:text-gray-300 hover:text-logo-purple dark:hover:text-logo-purple"
                   )}
                 >
                   Dashboard
@@ -125,8 +109,8 @@ const Navbar = () => {
                   className={cn(
                     "text-sm font-medium transition-colors",
                     isActive("/track")
-                      ? "text-purple-600 dark:text-purple-400"
-                      : "text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
+                      ? "text-logo-magenta dark:text-logo-magenta"
+                      : "text-gray-700 dark:text-gray-300 hover:text-logo-purple dark:hover:text-logo-purple"
                   )}
                 >
                   Track
@@ -144,8 +128,8 @@ const Navbar = () => {
                     variant="ghost" 
                     className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                   >
-                    <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                      <span className="text-purple-700 dark:text-purple-300 text-sm font-medium">
+                    <div className="w-8 h-8 rounded-full bg-logo-gradient flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">
                         {user?.user_metadata?.full_name?.[0] || user?.email?.[0] || "U"}
                       </span>
                     </div>
@@ -175,7 +159,7 @@ const Navbar = () => {
                   </Button>
                 </Link>
                 <Link to="/signup">
-                  <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+                  <Button className="bg-logo-gradient hover:opacity-90 text-white border-none">
                     Sign Up
                   </Button>
                 </Link>
@@ -206,7 +190,7 @@ const Navbar = () => {
                 className={cn(
                   "px-4 py-2 rounded-lg text-sm font-medium",
                   isActive("/")
-                    ? "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400"
+                    ? "bg-gray-50 dark:bg-gray-800 text-logo-magenta dark:text-logo-magenta"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                 )}
               >
@@ -217,7 +201,7 @@ const Navbar = () => {
                 className={cn(
                   "px-4 py-2 rounded-lg text-sm font-medium",
                   isActive("/assessment")
-                    ? "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400"
+                    ? "bg-gray-50 dark:bg-gray-800 text-logo-magenta dark:text-logo-magenta"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                 )}
               >
@@ -231,7 +215,7 @@ const Navbar = () => {
                     className={cn(
                       "px-4 py-2 rounded-lg text-sm font-medium",
                       isActive("/results")
-                        ? "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400"
+                        ? "bg-gray-50 dark:bg-gray-800 text-logo-magenta dark:text-logo-magenta"
                         : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                     )}
                   >
@@ -242,7 +226,7 @@ const Navbar = () => {
                     className={cn(
                       "px-4 py-2 rounded-lg text-sm font-medium",
                       isActive("/dashboard")
-                        ? "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400"
+                        ? "bg-gray-50 dark:bg-gray-800 text-logo-magenta dark:text-logo-magenta"
                         : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                     )}
                   >
@@ -253,7 +237,7 @@ const Navbar = () => {
                     className={cn(
                       "px-4 py-2 rounded-lg text-sm font-medium",
                       isActive("/track")
-                        ? "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400"
+                        ? "bg-gray-50 dark:bg-gray-800 text-logo-magenta dark:text-logo-magenta"
                         : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                     )}
                   >
@@ -268,7 +252,7 @@ const Navbar = () => {
                     </Button>
                   </Link>
                   <Link to="/signup">
-                    <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                    <Button className="w-full bg-logo-gradient hover:opacity-90 text-white border-none">
                       Sign Up
                     </Button>
                   </Link>
@@ -278,8 +262,8 @@ const Navbar = () => {
               {user && (
                 <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-800">
                   <div className="flex items-center px-4 py-2">
-                    <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                      <span className="text-purple-700 dark:text-purple-300 text-sm font-medium">
+                    <div className="w-8 h-8 rounded-full bg-logo-gradient flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">
                         {user?.user_metadata?.full_name?.[0] || user?.email?.[0] || "U"}
                       </span>
                     </div>

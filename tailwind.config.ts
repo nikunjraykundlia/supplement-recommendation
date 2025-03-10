@@ -20,8 +20,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Inter var', 'sans-serif'],
-				display: ['SF Pro Display', 'Inter', 'sans-serif'],
+				sans: ['Montserrat', 'Inter var', 'sans-serif'],
+				display: ['Montserrat', 'SF Pro Display', 'Inter', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -66,6 +66,12 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Adding specific logo colors
+				logo: {
+					magenta: '#E9298F',
+					purple: '#9332C3',
+					blue: '#0E92D7',
 				}
 			},
 			borderRadius: {
