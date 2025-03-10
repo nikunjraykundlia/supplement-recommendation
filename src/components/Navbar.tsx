@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Flask } from "lucide-react";
+import { Menu, X, Beaker } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -59,10 +59,7 @@ const Navbar = () => {
                 : "bg-purple-600/90"
             )}>
               <div className="relative">
-                <Flask className="text-white w-5 h-5" />
-                <div className="absolute -top-1 -right-1 text-white font-bold text-sm">
-                  SA
-                </div>
+                <span className="text-white font-bold text-sm">S&A</span>
               </div>
             </div>
             <span className={cn(

@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, ClipboardList, Flask } from "lucide-react";
+import { ArrowRight, ClipboardList, Beaker } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import SupplementCard from "@/components/SupplementCard";
 import SupplementDetail from "@/components/SupplementDetail";
@@ -36,18 +36,28 @@ const Dashboard = () => {
       }
     };
     
-    // Simulate API call to fetch recommended supplements
+    // Fetch only the recommended supplements for the user
     const fetchSupplements = async () => {
       try {
         // Artificial delay to simulate network request
         await new Promise(resolve => setTimeout(resolve, 800));
-        const recommendedSupplements = getRecommendedSupplements();
         
-        setSupplements(recommendedSupplements);
+        // Get user's supplement IDs from local storage
+        const userSupplementIds = getUserSupplements();
         
-        // Set the first supplement as selected by default
-        if (recommendedSupplements.length > 0) {
-          setSelectedSupplement(recommendedSupplements[0]);
+        // Get all recommended supplements
+        const allSupplements = getRecommendedSupplements();
+        
+        // Filter to only show the user's recommended supplements
+        const userRecommendedSupplements = allSupplements.filter(supp => 
+          userSupplementIds.includes(supp.id)
+        );
+        
+        setSupplements(userRecommendedSupplements);
+        
+        // Set the first supplement as selected by default if any exist
+        if (userRecommendedSupplements.length > 0) {
+          setSelectedSupplement(userRecommendedSupplements[0]);
         }
         
         setLoading(false);
@@ -94,7 +104,7 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center mb-12">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 mb-6 animate-fade-in">
-              <Flask className="w-4 h-4 mr-2" />
+              <Beaker className="w-4 h-4 mr-2" />
               <span className="text-sm font-medium">Supplement Alchemist</span>
             </div>
             

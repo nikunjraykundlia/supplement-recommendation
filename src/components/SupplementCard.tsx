@@ -22,6 +22,8 @@ const SupplementCard = ({
   const [showDetails, setShowDetails] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
+  
+  const fallbackImage = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -37,14 +39,19 @@ const SupplementCard = ({
 
   const handleImageError = () => {
     setImageFailed(true);
-    // Use a better fallback image strategy
-    const backupImage = `https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80`;
-    
-    // Update the image source directly
+    // When image fails, update the src directly
     const imgElement = document.getElementById(`supp-img-${supplement.id}`) as HTMLImageElement;
     if (imgElement) {
-      imgElement.src = backupImage;
+      imgElement.src = fallbackImage;
     }
+    
+    // Try again with loading animation
+    setImageLoaded(false);
+    
+    // After a short delay, mark as loaded
+    setTimeout(() => {
+      setImageLoaded(true);
+    }, 500);
   };
 
   return (
@@ -61,7 +68,7 @@ const SupplementCard = ({
         )}
         <img
           id={`supp-img-${supplement.id}`}
-          src={supplement.imageUrl}
+          src={supplement.imageUrl || fallbackImage}
           alt={supplement.name}
           className={cn(
             "w-full h-full object-cover transition-all duration-300",

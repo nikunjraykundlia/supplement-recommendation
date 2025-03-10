@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Flask, Sparkles, Brain, Battery, Shield, Award } from "lucide-react";
+import { ArrowRight, Sparkles, Brain, Battery, Shield, Award, Beaker } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -64,7 +64,7 @@ const Index = () => {
             <div className="flex-1 text-center lg:text-left">
               <div className="inline-flex items-center justify-center mb-8 lg:justify-start">
                 <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-purple-600 bg-opacity-10">
-                  <Flask className="w-6 h-6 text-purple-600" />
+                  <Beaker className="w-6 h-6 text-purple-600" />
                 </div>
                 <span className="ml-3 text-lg font-medium text-purple-600">Science-Backed Solutions</span>
               </div>
@@ -293,7 +293,7 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6 text-center">
           <div className="flex items-center justify-center space-x-2 mb-6">
             <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center">
-              <div className="text-white font-bold text-lg">SA</div>
+              <div className="text-white font-bold text-lg">S&A</div>
             </div>
             <span className="font-display font-medium text-gray-900 dark:text-white text-lg">Supplement Alchemist</span>
           </div>

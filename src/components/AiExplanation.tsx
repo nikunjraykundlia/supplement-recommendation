@@ -76,12 +76,12 @@ const AiExplanation = ({ assessmentData }: AiExplanationProps) => {
       name: "Magnesium Glycinate",
       studies: [
         {
-          title: "Oral Magnesium Supplementation in Chronic Fatigue Syndrome",
-          journal: "Journal of Nutrition and Metabolism",
+          title: "The effect of magnesium supplementation on primary insomnia in elderly: A double-blind placebo-controlled clinical trial",
+          journal: "Journal of Research in Medical Sciences",
           year: 2012,
-          authors: "Cox IM, et al.",
-          url: "https://www.hindawi.com/journals/jnme/2012/730874/",
-          findings: "Magnesium supplementation improved energy levels, emotional state, and pain in patients with chronic fatigue syndrome."
+          authors: "Abbasi B, et al.",
+          url: "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3703169/",
+          findings: "Magnesium supplementation improved subjective measures of insomnia including sleep efficiency, sleep time, and early morning awakening."
         },
         {
           title: "The Effects of Magnesium Supplementation on Subjective Anxiety and Stress",
@@ -97,20 +97,20 @@ const AiExplanation = ({ assessmentData }: AiExplanationProps) => {
       name: "Omega-3 Fish Oil",
       studies: [
         {
-          title: "Meta-analysis of the effects of omega-3 polyunsaturated fatty acids on inflammatory markers in coronary heart disease",
-          journal: "European Journal of Pharmacology",
-          year: 2016,
-          authors: "Chen B, et al.",
-          url: "https://www.sciencedirect.com/science/article/abs/pii/S0014299916301406",
-          findings: "Omega-3 supplementation significantly reduced levels of inflammatory markers associated with heart disease."
+          title: "Marine Omega-3 Fatty Acids and Inflammatory Processes: Effects, Mechanisms and Clinical Relevance",
+          journal: "Biochimica et Biophysica Acta",
+          year: 2015,
+          authors: "Calder PC",
+          url: "https://www.sciencedirect.com/science/article/abs/pii/S1388198114002145",
+          findings: "Omega-3 fatty acids from fish oil exhibit anti-inflammatory effects through multiple mechanisms, including reduced production of inflammatory eicosanoids and cytokines."
         },
         {
-          title: "Omega-3 Fatty Acids and Depression: Scientific Evidence and Biological Mechanisms",
-          journal: "Oxidative Medicine and Cellular Longevity",
-          year: 2014,
-          authors: "Grosso G, et al.",
-          url: "https://www.hindawi.com/journals/omcl/2014/313570/",
-          findings: "Omega-3 fatty acids appear to have beneficial effects on depressive symptoms, potentially through anti-inflammatory and neuroplasticity mechanisms."
+          title: "Meta-analysis of the effects of eicosapentaenoic acid (EPA) in clinical trials in depression",
+          journal: "Journal of Clinical Psychiatry",
+          year: 2011,
+          authors: "Sublette ME, et al.",
+          url: "https://www.psychiatrist.com/jcp/depression/meta-analysis-effects-eicosapentaenoic-acid-epa-clinical/",
+          findings: "EPA supplementation was significantly more effective than placebo in treating depression, with significant effects observed at doses ≥60% EPA of total EPA + DHA."
         }
       ]
     },
@@ -118,20 +118,20 @@ const AiExplanation = ({ assessmentData }: AiExplanationProps) => {
       name: "Vitamin B Complex",
       studies: [
         {
-          title: "Effect of high-dose B vitamin supplementation on cognitive function and blood biomarkers",
-          journal: "International Journal of Geriatric Psychiatry",
-          year: 2012,
-          authors: "Ford AH, et al.",
-          url: "https://onlinelibrary.wiley.com/doi/abs/10.1002/gps.2758",
-          findings: "B vitamin supplementation significantly improved cognitive function in older adults with mild cognitive impairment."
-        },
-        {
           title: "B Vitamins and the Brain: Mechanisms, Dose and Efficacy—A Review",
           journal: "Nutrients",
           year: 2016,
           authors: "Kennedy DO",
           url: "https://www.mdpi.com/2072-6643/8/2/68",
           findings: "B vitamins play crucial roles in cellular metabolism and are essential for optimal brain function, with research supporting improvements in mental energy and cognitive performance."
+        },
+        {
+          title: "Effects of B vitamins and omega 3 fatty acids on cardiovascular diseases: a randomised placebo controlled trial",
+          journal: "BMJ",
+          year: 2010,
+          authors: "Galan P, et al.",
+          url: "https://www.bmj.com/content/341/bmj.c6273",
+          findings: "Lowering homocysteine with B vitamins did not significantly reduce the incidence of cardiovascular outcomes, highlighting the complex relationship between B vitamins and heart health."
         }
       ]
     },
