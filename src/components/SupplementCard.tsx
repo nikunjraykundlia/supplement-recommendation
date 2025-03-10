@@ -37,8 +37,9 @@ const SupplementCard = ({
 
   const handleImageError = () => {
     setImageFailed(true);
-    // Use a backup image URL
-    const backupImage = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
+    // Use a better fallback image strategy
+    const backupImage = `https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80`;
+    
     // Update the image source directly
     const imgElement = document.getElementById(`supp-img-${supplement.id}`) as HTMLImageElement;
     if (imgElement) {
@@ -48,9 +49,9 @@ const SupplementCard = ({
 
   return (
     <div className={cn(
-      "rounded-xl overflow-hidden transition-all-300",
+      "rounded-xl overflow-hidden transition-all duration-300",
       "border border-border bg-card hover:shadow-lg",
-      showDetails ? "ring-1 ring-primary/20" : ""
+      showDetails ? "ring-1 ring-purple-600/20" : ""
     )}>
       <div className="relative h-48 overflow-hidden">
         {!imageLoaded && (
@@ -63,7 +64,7 @@ const SupplementCard = ({
           src={supplement.imageUrl}
           alt={supplement.name}
           className={cn(
-            "w-full h-full object-cover transition-all-300",
+            "w-full h-full object-cover transition-all duration-300",
             imageLoaded ? "opacity-100" : "opacity-0"
           )}
           onLoad={() => setImageLoaded(true)}
@@ -80,9 +81,9 @@ const SupplementCard = ({
           <button
             onClick={toggleDetails}
             className={cn(
-              "p-2 rounded-full transition-all-200",
+              "p-2 rounded-full transition-all duration-200",
               showDetails 
-                ? "bg-primary/10 text-primary" 
+                ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400" 
                 : "hover:bg-muted"
             )}
             aria-label="Toggle details"
@@ -96,7 +97,7 @@ const SupplementCard = ({
         </p>
         
         <div className={cn(
-          "mt-4 space-y-4 overflow-hidden transition-all-300",
+          "mt-4 space-y-4 overflow-hidden transition-all duration-300",
           showDetails ? "max-h-96" : "max-h-0"
         )}>
           <div>
@@ -104,7 +105,7 @@ const SupplementCard = ({
             <ul className="space-y-1">
               {supplement.benefits.map((benefit, index) => (
                 <li key={index} className="flex items-start">
-                  <Check className="w-4 h-4 text-primary mr-2 mt-1 flex-shrink-0" />
+                  <Check className="w-4 h-4 text-purple-600 dark:text-purple-400 mr-2 mt-1 flex-shrink-0" />
                   <span className="text-sm">{benefit}</span>
                 </li>
               ))}
@@ -128,12 +129,12 @@ const SupplementCard = ({
             onClick={handleAddRemove}
             disabled={alreadyAdded}
             className={cn(
-              "w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full transition-all-200",
+              "w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-full transition-all duration-200",
               isAdded 
                 ? alreadyAdded 
-                  ? "bg-primary/20 text-primary cursor-default" 
+                  ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 cursor-default" 
                   : "bg-accent text-foreground hover:bg-accent/80"
-                : "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "bg-purple-600 hover:bg-purple-700 text-white"
             )}
           >
             {isAdded ? (

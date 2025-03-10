@@ -31,6 +31,9 @@ const getSupplementImageUrl = (supplement: string): string => {
     "nac": "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     "lions-mane": "https://images.unsplash.com/photo-1607469256565-921a7272dbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     "resveratrol": "https://images.unsplash.com/photo-1552526881-5517a57b6d4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "rhodiola": "https://images.unsplash.com/photo-1611930022073-84a47d8afeac?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "spirulina": "https://images.unsplash.com/photo-1597736595206-99a8c173964f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    "alpha-lipoic-acid": "https://images.unsplash.com/photo-1585435557885-6511f1e0e3a4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
   };
 
   return defaultImages[supplement as keyof typeof defaultImages] || 
@@ -378,6 +381,63 @@ export const supplements: Supplement[] = [
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6164842/",
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4030174/"
+    ]
+  },
+  {
+    id: "rhodiola",
+    name: "Rhodiola Rosea",
+    category: "Adaptogen",
+    description: "Powerful adaptogen that enhances physical and mental performance under stress.",
+    benefits: [
+      "Reduces physical and mental fatigue",
+      "Improves stress resilience and adaptation",
+      "Enhances cognitive function and mental clarity"
+    ],
+    dosage: "200-600mg daily",
+    timing: "Morning, preferably before breakfast",
+    imageUrl: getSupplementImageUrl("rhodiola"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5836007/",
+      "https://pubmed.ncbi.nlm.nih.gov/30002792/"
+    ]
+  },
+  {
+    id: "spirulina",
+    name: "Spirulina",
+    category: "Superfood",
+    description: "Nutrient-dense blue-green algae with powerful antioxidant properties.",
+    benefits: [
+      "Provides complete protein with all essential amino acids",
+      "Contains powerful antioxidants like phycocyanin",
+      "Supports immune function and reduces inflammation"
+    ],
+    dosage: "1-3g daily",
+    timing: "Morning or afternoon with food",
+    imageUrl: getSupplementImageUrl("spirulina"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3136577/",
+      "https://pubmed.ncbi.nlm.nih.gov/25006989/"
+    ]
+  },
+  {
+    id: "alpha-lipoic-acid",
+    name: "Alpha Lipoic Acid",
+    category: "Antioxidant",
+    description: "Powerful antioxidant that functions in both water and fat-soluble environments.",
+    benefits: [
+      "Recycles other antioxidants like vitamins C and E",
+      "Supports healthy glucose metabolism",
+      "May improve nerve function and reduce oxidative stress"
+    ],
+    dosage: "300-600mg daily",
+    timing: "With meals",
+    imageUrl: getSupplementImageUrl("alpha-lipoic-acid"),
+    recommended: false,
+    scientific_references: [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6723188/",
+      "https://pubmed.ncbi.nlm.nih.gov/28809836/"
     ]
   }
 ];
