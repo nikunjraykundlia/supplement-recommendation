@@ -67,6 +67,7 @@
   background-color: #10B981;
   border-radius: 50%;
   border: 2px solid white;
+  transition: all 0.2s ease;
 }
 
 .avatar-badge.offline {
@@ -75,4 +76,13 @@
 
 .avatar-badge.away {
   background-color: #F59E0B;
+}
+
+/* Animation utilities */
+.transition-all-200 {
+  transition: all 0.2s ease;
+}
+
+.transition-all-300 {
+  transition: all 0.3s ease;
 }

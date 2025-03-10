@@ -9,7 +9,10 @@ import {
   AlertTriangle,
   Zap,
   Award,
-  CalendarDays
+  CalendarDays,
+  Target,
+  Leaf,
+  TrendingUp
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getUserProfile, getUserDeficiencies, getUserStrengthAreas, getAssessmentHistory } from "@/lib/ai-recommender";
@@ -67,11 +70,26 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
     return assessmentHistory.length;
   };
   
+  const getAssessmentProgress = () => {
+    if (assessmentHistory.length === 0) return 0;
+    const scores = assessmentHistory.map(a => a.complianceScore || 0);
+    const initialScore = scores[0];
+    const currentScore = scores[scores.length - 1];
+    return currentScore - initialScore;
+  };
+  
   const getAvatarColor = () => {
     const score = getComplianceScore();
     if (score >= 80) return "bg-green-500";
     if (score >= 50) return "bg-yellow-500";
     return "bg-primary";
+  };
+  
+  const getProgressStatus = () => {
+    const progress = getAssessmentProgress();
+    if (progress > 0) return "Improving";
+    if (progress < 0) return "Declining";
+    return "Stable";
   };
   
   if (!showMenu) {
@@ -89,12 +107,19 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
     <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
       <DropdownMenuTrigger className="focus:outline-none">
         <div className="flex items-center gap-2 p-1 rounded-full transition hover:bg-muted">
-          <Avatar className={cn(sizeClasses[size])}>
-            <AvatarImage src={userProfile?.avatar} />
-            <AvatarFallback className={getAvatarColor()}>
-              {getInitials()}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <Avatar className={cn(sizeClasses[size])}>
+              <AvatarImage src={userProfile?.avatar} />
+              <AvatarFallback className={getAvatarColor()}>
+                {getInitials()}
+              </AvatarFallback>
+            </Avatar>
+            <div className={cn(
+              "avatar-badge",
+              getComplianceScore() >= 80 ? "" : 
+              getComplianceScore() >= 50 ? "away" : "offline"
+            )} />
+          </div>
           {size !== "sm" && <ChevronDown className="h-4 w-4 text-muted-foreground" />}
         </div>
       </DropdownMenuTrigger>
@@ -105,6 +130,16 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
             <div>
               <h3 className="font-medium text-lg">{userProfile?.displayName || "User"}</h3>
               <p className="text-muted-foreground text-sm">{userProfile?.email || ""}</p>
+              <div className="flex items-center gap-1 mt-1">
+                <TrendingUp className={cn(
+                  "h-4 w-4",
+                  getAssessmentProgress() > 0 ? "text-green-500" :
+                  getAssessmentProgress() < 0 ? "text-red-500" : "text-yellow-500"
+                )} />
+                <span className="text-sm font-medium">
+                  {getProgressStatus()}
+                </span>
+              </div>
             </div>
             <Avatar className="h-14 w-14">
               <AvatarImage src={userProfile?.avatar} />
@@ -139,7 +174,7 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
               <div className="space-y-2">
                 <h4 className="text-sm font-medium flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                  Nutrient Gaps
+                  Areas to Improve
                 </h4>
                 <div className="flex flex-wrap gap-1">
                   {deficiencies.map((deficiency, i) => (
@@ -155,7 +190,7 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
               <div className="space-y-2">
                 <h4 className="text-sm font-medium flex items-center gap-2">
                   <Dumbbell className="h-4 w-4 text-green-500" />
-                  Strength Areas
+                  Your Strengths
                 </h4>
                 <div className="flex flex-wrap gap-1">
                   {strengthAreas.map((strength, i) => (
@@ -163,6 +198,39 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
                       {strength}
                     </span>
                   ))}
+                </div>
+              </div>
+            )}
+            
+            {assessmentHistory.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium flex items-center gap-2">
+                  <Target className="h-4 w-4 text-primary" />
+                  Progress Tracking
+                </h4>
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-muted-foreground">Initial Score</span>
+                    <span className="text-sm font-medium">
+                      {assessmentHistory[0].complianceScore || 0}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-muted-foreground">Current Score</span>
+                    <span className="text-sm font-medium">
+                      {assessmentHistory[assessmentHistory.length - 1].complianceScore || 0}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-muted-foreground">Progress</span>
+                    <span className={cn(
+                      "text-sm font-medium",
+                      getAssessmentProgress() > 0 ? "text-green-500" :
+                      getAssessmentProgress() < 0 ? "text-red-500" : "text-yellow-500"
+                    )}>
+                      {getAssessmentProgress() > 0 ? "+" : ""}{getAssessmentProgress()}%
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
