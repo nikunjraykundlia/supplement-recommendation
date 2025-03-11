@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -16,11 +15,9 @@ const Navbar = () => {
   const location = useLocation();
   const { user, signOut } = useAuth();
   
-  // Check if user has completed assessment
   const [hasCompletedAssessment, setHasCompletedAssessment] = useState(false);
   
   useEffect(() => {
-    // Check if user has completed the assessment based on localStorage
     const lastAssessment = localStorage.getItem("lastAssessmentDate");
     setHasCompletedAssessment(!!lastAssessment);
   }, [location.pathname]);
@@ -41,14 +38,9 @@ const Navbar = () => {
     { name: "Track", path: "/track", authRequired: true, assessmentRequired: true },
   ];
   
-  // Filter nav links based on authentication and assessment status
   const filteredNavLinks = navLinks.filter(link => {
-    // If link requires authentication and user is not authenticated, hide it
     if (link.authRequired && !user) return false;
-    
-    // If link requires assessment and user hasn't completed it, hide it
     if (link.assessmentRequired && !hasCompletedAssessment) return false;
-    
     return true;
   });
 
@@ -61,12 +53,10 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between">
-          {/* Logo */}
           <Link to="/" className="flex-shrink-0">
             <Logo size={isScrolled ? "sm" : "md"} type="full" />
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {filteredNavLinks.map((link) => (
               <Link
@@ -81,7 +71,6 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* Assessment Button always visible when logged in */}
             {user && (
               <Link to="/assessment">
                 <Button variant="default" size="sm">
@@ -90,7 +79,6 @@ const Navbar = () => {
               </Link>
             )}
             
-            {/* Authentication Links or User Avatar */}
             {user ? (
               <UserAvatar size="md" showMenu={true} onSignOut={signOut} />
             ) : (
@@ -109,7 +97,6 @@ const Navbar = () => {
             )}
           </nav>
 
-          {/* Mobile Navigation Toggle */}
           <div className="flex items-center md:hidden gap-2">
             {user && <UserAvatar size="sm" showMenu={false} />}
             
@@ -123,7 +110,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Menu */}
       <div
         className={cn(
           "fixed inset-0 z-40 bg-background md:hidden transition-transform duration-300 ease-in-out transform",
@@ -143,7 +129,6 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* Assessment Button always visible when logged in */}
             {user && (
               <Link 
                 to="/assessment"
@@ -154,7 +139,6 @@ const Navbar = () => {
               </Link>
             )}
             
-            {/* Authentication Links */}
             {!user ? (
               <div className="flex flex-col space-y-4 pt-4 border-t border-border">
                 <Link

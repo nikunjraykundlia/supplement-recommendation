@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, Brain, Battery, Shield, Award, Beaker } from "lucide-react";
@@ -45,6 +44,14 @@ const Index = () => {
     rating: 5
   }];
 
+  // User profile images for the "Join 1,200+ users" section
+  const userImages = [
+    "/lovable-uploads/4fd75ee2-f2b3-438a-9011-730b8efb1f43.png", // Use existing image
+    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80", // Woman using laptop
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80", // Person using laptop
+    "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80", // Man in office chair
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
       <Navbar />
@@ -88,17 +95,17 @@ const Index = () => {
               
               <div className="mt-8 flex items-center justify-center lg:justify-start space-x-2 text-sm">
                 <div className="flex -space-x-1">
-                  {[1, 2, 3, 4].map(i => (
+                  {userImages.map((imgSrc, i) => (
                     <div 
                       key={i} 
-                      className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800"
-                      style={{
-                        background: i === 1 ? '#E9298F' : 
-                                  i === 2 ? '#9332C3' : 
-                                  i === 3 ? '#0E92D7' : 
-                                  '#4A5568'
-                      }}
-                    ></div>
+                      className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 overflow-hidden"
+                    >
+                      <img 
+                        src={imgSrc} 
+                        alt={`User ${i+1}`} 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   ))}
                 </div>
                 <span className="text-gray-600 dark:text-gray-400">
