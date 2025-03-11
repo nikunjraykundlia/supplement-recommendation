@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Session, User } from '@supabase/supabase-js'
-import { supabase, getCurrentUser, getSession } from '@/lib/supabase'
+import { supabase, getCurrentUser, getSession, signOut as supabaseSignOut } from '@/lib/supabase'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -10,6 +10,7 @@ type AuthContextType = {
   user: User | null
   loading: boolean
   signOut: () => Promise<void>
+  isAuthenticated: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -18,6 +19,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null)
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -30,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (currentSession) {
           const currentUser = await getCurrentUser()
           setUser(currentUser)
+          setIsAuthenticated(true)
           toast.success('Successfully signed in!')
         }
       } catch (error) {
@@ -46,11 +49,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       (event, session) => {
         setSession(session)
         setUser(session?.user || null)
+        setIsAuthenticated(!!session?.user)
         setLoading(false)
         
         if (event === 'SIGNED_IN') {
           toast.success('Successfully signed in!')
           navigate('/results')
+        } else if (event === 'SIGNED_OUT') {
+          toast.info('Successfully signed out')
+          navigate('/')
         }
       }
     )
@@ -61,15 +68,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [navigate])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    navigate('/')
+    try {
+      await supabaseSignOut()
+      setUser(null)
+      setSession(null)
+      setIsAuthenticated(false)
+      navigate('/')
+    } catch (error) {
+      console.error('Sign out error:', error)
+      toast.error('Failed to sign out')
+    }
   }
 
   const value = {
     session,
     user,
     loading,
-    signOut: handleSignOut
+    signOut: handleSignOut,
+    isAuthenticated
   }
 
   return (

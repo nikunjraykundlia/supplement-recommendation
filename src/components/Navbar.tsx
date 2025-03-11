@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,7 +14,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const isMobile = useIsMobile();
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAuthenticated } = useAuth();
   
   const [hasCompletedAssessment, setHasCompletedAssessment] = useState(false);
   
@@ -39,10 +40,15 @@ const Navbar = () => {
   ];
   
   const filteredNavLinks = navLinks.filter(link => {
-    if (link.authRequired && !user) return false;
+    if (link.authRequired && !isAuthenticated) return false;
     if (link.assessmentRequired && !hasCompletedAssessment) return false;
     return true;
   });
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsOpen(false);
+  };
 
   return (
     <header
@@ -71,7 +77,7 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {user && (
+            {isAuthenticated && (
               <Link to="/assessment">
                 <Button variant="default" size="sm">
                   {hasCompletedAssessment ? "Re-take Assessment" : "Take Assessment"}
@@ -79,8 +85,19 @@ const Navbar = () => {
               </Link>
             )}
             
-            {user ? (
-              <UserAvatar size="md" showMenu={true} onSignOut={signOut} />
+            {isAuthenticated ? (
+              <div className="flex items-center gap-4">
+                <UserAvatar size="md" showMenu={true} onSignOut={handleSignOut} />
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex items-center gap-1 text-destructive"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="h-4 w-4" />
+                  Log Out
+                </Button>
+              </div>
             ) : (
               <div className="flex items-center space-x-2">
                 <Link to="/login">
@@ -98,7 +115,7 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center md:hidden gap-2">
-            {user && <UserAvatar size="sm" showMenu={false} />}
+            {isAuthenticated && <UserAvatar size="sm" showMenu={false} />}
             
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -129,7 +146,7 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {user && (
+            {isAuthenticated && (
               <Link 
                 to="/assessment"
                 className="text-xl font-medium text-primary hover:opacity-80 transition-colors"
@@ -139,7 +156,7 @@ const Navbar = () => {
               </Link>
             )}
             
-            {!user ? (
+            {!isAuthenticated ? (
               <div className="flex flex-col space-y-4 pt-4 border-t border-border">
                 <Link
                   to="/login"
@@ -158,12 +175,10 @@ const Navbar = () => {
               </div>
             ) : (
               <button
-                onClick={() => {
-                  signOut();
-                  setIsOpen(false);
-                }}
-                className="text-xl font-medium text-destructive hover:opacity-80 transition-colors pt-4 text-left border-t border-border"
+                onClick={handleSignOut}
+                className="text-xl font-medium text-destructive hover:opacity-80 transition-colors pt-4 text-left border-t border-border flex items-center gap-2"
               >
+                <LogOut className="h-5 w-5" />
                 Sign Out
               </button>
             )}
