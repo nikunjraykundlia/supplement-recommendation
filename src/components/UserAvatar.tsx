@@ -12,7 +12,8 @@ import {
   CalendarDays,
   Target,
   Leaf,
-  TrendingUp
+  TrendingUp,
+  User
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getUserProfile, getUserDeficiencies, getUserStrengthAreas, getAssessmentHistory } from "@/lib/ai-recommender";
@@ -24,6 +25,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 
@@ -124,118 +128,129 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
         </div>
       </DropdownMenuTrigger>
       
-      <DropdownMenuContent align="end" className="w-80">
-        <div className="p-4">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h3 className="font-medium text-lg">{userProfile?.displayName || "User"}</h3>
-              <p className="text-muted-foreground text-sm">{userProfile?.email || ""}</p>
-              <div className="flex items-center gap-1 mt-1">
-                <TrendingUp className={cn(
-                  "h-4 w-4",
-                  getAssessmentProgress() > 0 ? "text-green-500" :
-                  getAssessmentProgress() < 0 ? "text-red-500" : "text-yellow-500"
-                )} />
-                <span className="text-sm font-medium">
-                  {getProgressStatus()}
-                </span>
-              </div>
-            </div>
-            <Avatar className="h-14 w-14">
-              <AvatarImage src={userProfile?.avatar} />
-              <AvatarFallback className={getAvatarColor()}>
-                {getInitials()}
-              </AvatarFallback>
-            </Avatar>
+      <DropdownMenuContent align="end" className="w-64">
+        <DropdownMenuItem className="cursor-pointer">
+          <div className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger className="w-full">
+                <span>Your Avatar</span>
+              </DropdownMenuSubTrigger>
+              
+              <DropdownMenuSubContent className="w-80 p-4">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="font-medium text-lg">{userProfile?.displayName || "User"}</h3>
+                    <p className="text-muted-foreground text-sm">{userProfile?.email || ""}</p>
+                    <div className="flex items-center gap-1 mt-1">
+                      <TrendingUp className={cn(
+                        "h-4 w-4",
+                        getAssessmentProgress() > 0 ? "text-green-500" :
+                        getAssessmentProgress() < 0 ? "text-red-500" : "text-yellow-500"
+                      )} />
+                      <span className="text-sm font-medium">
+                        {getProgressStatus()}
+                      </span>
+                    </div>
+                  </div>
+                  <Avatar className="h-14 w-14">
+                    <AvatarImage src={userProfile?.avatar} />
+                    <AvatarFallback className={getAvatarColor()}>
+                      {getInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+                
+                <div className="space-y-4">
+                  {/* User Stats */}
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="bg-muted rounded-lg p-2">
+                      <PieChart className="h-5 w-5 mx-auto mb-1 text-primary" />
+                      <p className="text-xs text-muted-foreground">Compliance</p>
+                      <p className="font-medium">{getComplianceScore()}%</p>
+                    </div>
+                    <div className="bg-muted rounded-lg p-2">
+                      <CalendarDays className="h-5 w-5 mx-auto mb-1 text-primary" />
+                      <p className="text-xs text-muted-foreground">Assessments</p>
+                      <p className="font-medium">{getAssessmentCount()}</p>
+                    </div>
+                    <div className="bg-muted rounded-lg p-2">
+                      <Award className="h-5 w-5 mx-auto mb-1 text-primary" />
+                      <p className="text-xs text-muted-foreground">Last Assessed</p>
+                      <p className="font-medium text-xs">{getLatestAssessmentDate()}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Health Profile */}
+                  {deficiencies.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                        Areas to Improve
+                      </h4>
+                      <div className="flex flex-wrap gap-1">
+                        {deficiencies.map((deficiency, i) => (
+                          <span key={i} className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">
+                            {deficiency}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {strengthAreas.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium flex items-center gap-2">
+                        <Dumbbell className="h-4 w-4 text-green-500" />
+                        Your Strengths
+                      </h4>
+                      <div className="flex flex-wrap gap-1">
+                        {strengthAreas.map((strength, i) => (
+                          <span key={i} className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
+                            {strength}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {assessmentHistory.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium flex items-center gap-2">
+                        <Target className="h-4 w-4 text-primary" />
+                        Progress Tracking
+                      </h4>
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-muted-foreground">Initial Score</span>
+                          <span className="text-sm font-medium">
+                            {assessmentHistory[0].complianceScore || 0}%
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-muted-foreground">Current Score</span>
+                          <span className="text-sm font-medium">
+                            {assessmentHistory[assessmentHistory.length - 1].complianceScore || 0}%
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-muted-foreground">Progress</span>
+                          <span className={cn(
+                            "text-sm font-medium",
+                            getAssessmentProgress() > 0 ? "text-green-500" :
+                            getAssessmentProgress() < 0 ? "text-red-500" : "text-yellow-500"
+                          )}>
+                            {getAssessmentProgress() > 0 ? "+" : ""}{getAssessmentProgress()}%
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
           </div>
-          
-          <div className="space-y-4">
-            {/* User Stats */}
-            <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="bg-muted rounded-lg p-2">
-                <PieChart className="h-5 w-5 mx-auto mb-1 text-primary" />
-                <p className="text-xs text-muted-foreground">Compliance</p>
-                <p className="font-medium">{getComplianceScore()}%</p>
-              </div>
-              <div className="bg-muted rounded-lg p-2">
-                <CalendarDays className="h-5 w-5 mx-auto mb-1 text-primary" />
-                <p className="text-xs text-muted-foreground">Assessments</p>
-                <p className="font-medium">{getAssessmentCount()}</p>
-              </div>
-              <div className="bg-muted rounded-lg p-2">
-                <Award className="h-5 w-5 mx-auto mb-1 text-primary" />
-                <p className="text-xs text-muted-foreground">Last Assessed</p>
-                <p className="font-medium text-xs">{getLatestAssessmentDate()}</p>
-              </div>
-            </div>
-            
-            {/* Health Profile */}
-            {deficiencies.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-yellow-500" />
-                  Areas to Improve
-                </h4>
-                <div className="flex flex-wrap gap-1">
-                  {deficiencies.map((deficiency, i) => (
-                    <span key={i} className="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">
-                      {deficiency}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {strengthAreas.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium flex items-center gap-2">
-                  <Dumbbell className="h-4 w-4 text-green-500" />
-                  Your Strengths
-                </h4>
-                <div className="flex flex-wrap gap-1">
-                  {strengthAreas.map((strength, i) => (
-                    <span key={i} className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">
-                      {strength}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {assessmentHistory.length > 0 && (
-              <div className="space-y-2">
-                <h4 className="text-sm font-medium flex items-center gap-2">
-                  <Target className="h-4 w-4 text-primary" />
-                  Progress Tracking
-                </h4>
-                <div className="space-y-1">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-muted-foreground">Initial Score</span>
-                    <span className="text-sm font-medium">
-                      {assessmentHistory[0].complianceScore || 0}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-muted-foreground">Current Score</span>
-                    <span className="text-sm font-medium">
-                      {assessmentHistory[assessmentHistory.length - 1].complianceScore || 0}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-muted-foreground">Progress</span>
-                    <span className={cn(
-                      "text-sm font-medium",
-                      getAssessmentProgress() > 0 ? "text-green-500" :
-                      getAssessmentProgress() < 0 ? "text-red-500" : "text-yellow-500"
-                    )}>
-                      {getAssessmentProgress() > 0 ? "+" : ""}{getAssessmentProgress()}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        </DropdownMenuItem>
         
         <DropdownMenuSeparator />
         
