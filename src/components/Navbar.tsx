@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useMediaQuery } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Menu, X } from "lucide-react";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useIsMobile();
   const location = useLocation();
   const { user, signOut } = useAuth();
   
