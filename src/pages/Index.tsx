@@ -44,12 +44,12 @@ const Index = () => {
     rating: 5
   }];
 
-  // User profile images for the "Join 1,200+ users" section
+  // User profile images using provided Unsplash images
   const userImages = [
-    "/lovable-uploads/4fd75ee2-f2b3-438a-9011-730b8efb1f43.png", // Use existing image
-    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80", // Woman using laptop
-    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80", // Person using laptop
-    "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80", // Man in office chair
+    "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80",
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80",
+    "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80",
+    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80"
   ];
 
   return (
@@ -94,15 +94,15 @@ const Index = () => {
               </div>
               
               <div className="mt-8 flex items-center justify-center lg:justify-start space-x-2 text-sm">
-                <div className="flex -space-x-1">
+                <div className="flex -space-x-2">
                   {userImages.map((imgSrc, i) => (
                     <div 
                       key={i} 
-                      className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 overflow-hidden"
+                      className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 overflow-hidden shadow-sm"
                     >
                       <img 
                         src={imgSrc} 
-                        alt={`User ${i+1}`} 
+                        alt={`Community member ${i+1}`} 
                         className="w-full h-full object-cover"
                       />
                     </div>

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay, addDays, subDays, subWeeks } from "date-fns";
 import { Calendar, Clock, ArrowRight, LineChart, Check, X } from "lucide-react";
@@ -9,6 +8,7 @@ import { getUserSupplements, getSupplementsByIds, recordSupplementIntake, getCom
 import { Supplement } from "@/lib/supplements";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import GoogleCalendarSync from './GoogleCalendarSync';
 
 // Define WeekDay interface for tracking intake
 interface WeekDay {
@@ -315,7 +315,11 @@ const CombinedTracker = () => {
       </Card>
       
       <div className="mt-8">
-        <h3 className="text-xl font-bold mb-4">Monthly Calendar View</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold">Monthly Calendar View</h3>
+          <GoogleCalendarSync />
+        </div>
+        
         <p className="text-sm text-foreground/70 mb-4">
           Green dots indicate days when you've taken all your supplements. Click on a date to view or update your intake.
         </p>
