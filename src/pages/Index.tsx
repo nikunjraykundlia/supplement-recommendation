@@ -243,7 +243,7 @@ const Index = () => {
                 </Button>
               </Link>
               <Link to="/signup">
-                <Button size="lg" variant="outline" className="border-white w-full sm:w-auto text-base text-indigo-50 bg-violet-600 hover:bg-violet-500">
+                <Button size="lg" variant="outline" className="border-white w-full sm:w-auto text-indigo-50 bg-violet-600 hover:bg-violet-500 text-base font-semibold">
                   Create Account
                 </Button>
               </Link>
