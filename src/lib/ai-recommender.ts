@@ -1,4 +1,3 @@
-
 import { Supplement, supplements } from "./supplements";
 
 // Define assessment data interface with more detailed user information
@@ -91,377 +90,42 @@ export const calculateWeeklyAssessmentScore = (): number => {
   return Math.round((takenRecords / totalRecords) * 100);
 };
 
-// Enhanced AI recommendation engine
+// Advanced weighting factors for different assessment components
+const WEIGHTING_FACTORS = {
+  GOALS: 1.0,
+  CONCERNS: 1.2,
+  DEFICIENCIES: 1.5,
+  LIFESTYLE: 0.8,
+  AGE: 0.7,
+  SLEEP: 0.9,
+  STRESS: 0.9,
+  ENERGY: 0.9,
+  DIETARY: 0.7,
+  MEDICAL_HISTORY: 1.0,
+  SKIN: 0.8,
+  COGNITIVE: 0.8,
+  RESPIRATORY: 0.8
+};
+
+// Enhanced AI recommendation engine with multiple algorithms
 export const getRecommendedSupplementsForUser = (assessmentData: AssessmentData): Supplement[] => {
   // Start with all supplements
   let recommendedSupplements: Supplement[] = [...supplements];
-  let scores: { [key: string]: number } = {};
   
-  // Initialize scores
-  recommendedSupplements.forEach(supp => {
-    scores[supp.id] = 0;
-  });
+  // Use three different recommendation algorithms and combine their results
+  const scoreBasedRecommendations = getScoreBasedRecommendations(assessmentData);
+  const collaborativeRecommendations = getCollaborativeRecommendations(assessmentData);
+  const ruleBasedRecommendations = getRuleBasedRecommendations(assessmentData);
   
-  // Score supplements based on goals
-  if (assessmentData.goals.includes("Energy Boost")) {
-    scores["vitamin-b-complex"] += 5;
-    scores["magnesium-glycinate"] += 3;
-    scores["coq10"] += 4;
-    scores["l-theanine"] += 2;
-    scores["iron"] += 4;
-    scores["creatine"] += 3;
-  }
-  
-  if (assessmentData.goals.includes("Immune Support")) {
-    scores["vitamin-d3"] += 5;
-    scores["zinc"] += 4;
-    scores["vitamin-c"] += 4;
-    scores["selenium"] += 4;
-    scores["quercetin"] += 3;
-  }
-  
-  if (assessmentData.goals.includes("Muscle Recovery")) {
-    scores["magnesium-glycinate"] += 4;
-    scores["omega-3"] += 3;
-    scores["creatine"] += 5;
-    scores["glutamine"] += 4;
-  }
-  
-  if (assessmentData.goals.includes("Better Sleep")) {
-    scores["magnesium-glycinate"] += 5;
-    scores["l-theanine"] += 4;
-    scores["ashwagandha"] += 4;
-    scores["melatonin"] += 5;
-    scores["5-htp"] += 3;
-  }
-  
-  if (assessmentData.goals.includes("Brain Function")) {
-    scores["omega-3"] += 5;
-    scores["l-theanine"] += 4;
-    scores["vitamin-b-complex"] += 3;
-    scores["lions-mane"] += 5;
-    scores["creatine"] += 2;
-  }
-  
-  if (assessmentData.goals.includes("Stress Management")) {
-    scores["ashwagandha"] += 5;
-    scores["l-theanine"] += 4;
-    scores["magnesium-glycinate"] += 3;
-    scores["rhodiola"] += 4;
-    scores["5-htp"] += 3;
-  }
-  
-  if (assessmentData.goals.includes("Metabolic Health")) {
-    scores["berberine"] += 5;
-    scores["magnesium-glycinate"] += 3;
-    scores["zinc"] += 2;
-    scores["alpha-lipoic-acid"] += 4;
-    scores["chromium"] += 3;
-  }
-  
-  if (assessmentData.goals.includes("Heart Health")) {
-    scores["coq10"] += 5;
-    scores["omega-3"] += 5;
-    scores["vitamin-k2"] += 4;
-    scores["berberine"] += 3;
-    scores["quercetin"] += 3;
-  }
-  
-  if (assessmentData.goals.includes("Skin Health")) {
-    scores["collagen-peptides"] += 5;
-    scores["vitamin-c"] += 4;
-    scores["biotin"] += 5;
-    scores["vitamin-e"] += 4;
-    scores["omega-3"] += 3;
-  }
-  
-  if (assessmentData.goals.includes("Longevity")) {
-    scores["resveratrol"] += 5;
-    scores["coq10"] += 4;
-    scores["nac"] += 4;
-    scores["omega-3"] += 3;
-    scores["vitamin-d3"] += 3;
-  }
-  
-  if (assessmentData.goals.includes("Respiratory Health")) {
-    scores["nac"] += 5;
-    scores["vitamin-c"] += 4;
-    scores["vitamin-d3"] += 4;
-    scores["quercetin"] += 4;
-    scores["omega-3"] += 3;
-  }
-
-  // Score supplements based on lifestyle
-  if (assessmentData.lifestyle === "Very Active") {
-    scores["magnesium-glycinate"] += 4;
-    scores["omega-3"] += 3;
-    scores["vitamin-b-complex"] += 3;
-    scores["coq10"] += 3;
-    scores["creatine"] += 5;
-    scores["glutamine"] += 4;
-  } else if (assessmentData.lifestyle === "Sedentary") {
-    scores["vitamin-d3"] += 4;
-    scores["omega-3"] += 2;
-    scores["berberine"] += 2;
-    scores["coq10"] += 3;
-  }
-  
-  // Score supplements based on concerns
-  if (assessmentData.concerns.includes("Joint Pain")) {
-    scores["omega-3"] += 5;
-    scores["turmeric"] += 5;
-    scores["vitamin-d3"] += 3;
-    scores["msm"] += 5;
-    scores["collagen-peptides"] += 4;
-  }
-  
-  if (assessmentData.concerns.includes("Digestive Issues")) {
-    scores["probiotics"] += 5;
-    scores["berberine"] += 3;
-    scores["glutamine"] += 4;
-    scores["ginger"] += 4;
-  }
-  
-  if (assessmentData.concerns.includes("Low Energy")) {
-    scores["vitamin-b-complex"] += 5;
-    scores["vitamin-d3"] += 3;
-    scores["coq10"] += 4;
-    scores["iron"] += 5;
-    scores["creatine"] += 3;
-  }
-  
-  if (assessmentData.concerns.includes("Poor Sleep")) {
-    scores["magnesium-glycinate"] += 5;
-    scores["l-theanine"] += 4;
-    scores["ashwagandha"] += 4;
-    scores["melatonin"] += 5;
-    scores["5-htp"] += 3;
-  }
-  
-  if (assessmentData.concerns.includes("Brain Fog")) {
-    scores["omega-3"] += 4;
-    scores["vitamin-b-complex"] += 4;
-    scores["l-theanine"] += 3;
-    scores["lions-mane"] += 5;
-    scores["rhodiola"] += 3;
-  }
-  
-  if (assessmentData.concerns.includes("Stress")) {
-    scores["ashwagandha"] += 5;
-    scores["l-theanine"] += 4;
-    scores["magnesium-glycinate"] += 4;
-    scores["rhodiola"] += 4;
-    scores["5-htp"] += 3;
-  }
-  
-  if (assessmentData.concerns.includes("Blood Sugar Issues")) {
-    scores["berberine"] += 5;
-    scores["magnesium-glycinate"] += 3;
-    scores["zinc"] += 2;
-    scores["alpha-lipoic-acid"] += 4;
-  }
-  
-  if (assessmentData.concerns.includes("Heart Health Concerns")) {
-    scores["coq10"] += 5;
-    scores["omega-3"] += 5;
-    scores["vitamin-k2"] += 4;
-    scores["quercetin"] += 3;
-  }
-  
-  if (assessmentData.concerns.includes("Anxiety")) {
-    scores["ashwagandha"] += 5;
-    scores["l-theanine"] += 5;
-    scores["magnesium-glycinate"] += 4;
-    scores["5-htp"] += 4;
-    scores["rhodiola"] += 3;
-  }
-  
-  if (assessmentData.concerns.includes("Respiratory Issues")) {
-    scores["nac"] += 5;
-    scores["vitamin-c"] += 4;
-    scores["vitamin-d3"] += 4;
-    scores["quercetin"] += 4;
-  }
-  
-  if (assessmentData.concerns.includes("Aging Concerns")) {
-    scores["resveratrol"] += 5;
-    scores["coq10"] += 4;
-    scores["omega-3"] += 3;
-    scores["vitamin-d3"] += 3;
-    scores["collagen-peptides"] += 4;
-  }
-  
-  // Score supplements based on deficiencies
-  if (assessmentData.deficiencies) {
-    if (assessmentData.deficiencies.includes("Vitamin D")) {
-      scores["vitamin-d3"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("Magnesium")) {
-      scores["magnesium-glycinate"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("Zinc")) {
-      scores["zinc"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("Vitamin B12")) {
-      scores["vitamin-b-complex"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("Omega-3")) {
-      scores["omega-3"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("Vitamin K")) {
-      scores["vitamin-k2"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("CoQ10")) {
-      scores["coq10"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("Iron")) {
-      scores["iron"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("Vitamin E")) {
-      scores["vitamin-e"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("Selenium")) {
-      scores["selenium"] += 5;
-    }
-    
-    if (assessmentData.deficiencies.includes("Antioxidants")) {
-      scores["vitamin-c"] += 4;
-      scores["vitamin-e"] += 4;
-      scores["selenium"] += 4;
-      scores["alpha-lipoic-acid"] += 4;
-      scores["resveratrol"] += 4;
-    }
-    
-    if (assessmentData.deficiencies.includes("Collagen")) {
-      scores["collagen-peptides"] += 5;
-      scores["vitamin-c"] += 3;
-    }
-  }
-  
-  // Score supplements based on sleep quality
-  if (assessmentData.sleepQuality) {
-    if (assessmentData.sleepQuality === "Poor" || assessmentData.sleepQuality === "Fair") {
-      scores["magnesium-glycinate"] += 4;
-      scores["l-theanine"] += 3;
-      scores["ashwagandha"] += 3;
-      scores["melatonin"] += 4;
-      scores["5-htp"] += 3;
-    }
-  }
-  
-  // Score supplements based on stress level
-  if (assessmentData.stressLevel) {
-    if (assessmentData.stressLevel === "High" || assessmentData.stressLevel === "Very High") {
-      scores["ashwagandha"] += 5;
-      scores["l-theanine"] += 4;
-      scores["magnesium-glycinate"] += 3;
-      scores["rhodiola"] += 4;
-      scores["5-htp"] += 3;
-    }
-  }
-  
-  // Score supplements based on energy level
-  if (assessmentData.energyLevel) {
-    if (assessmentData.energyLevel === "Low" || assessmentData.energyLevel === "Very Low") {
-      scores["vitamin-b-complex"] += 4;
-      scores["coq10"] += 4;
-      scores["vitamin-d3"] += 3;
-      scores["iron"] += 4;
-      scores["rhodiola"] += 3;
-    }
-  }
-  
-  // Score supplements based on skin concerns
-  if (assessmentData.skinConcerns) {
-    if (assessmentData.skinConcerns.includes("Aging/Wrinkles")) {
-      scores["collagen-peptides"] += 5;
-      scores["vitamin-c"] += 4;
-      scores["vitamin-e"] += 4;
-      scores["resveratrol"] += 3;
-    }
-    
-    if (assessmentData.skinConcerns.includes("Dryness")) {
-      scores["omega-3"] += 4;
-      scores["vitamin-e"] += 4;
-      scores["biotin"] += 3;
-    }
-    
-    if (assessmentData.skinConcerns.includes("Elasticity Loss")) {
-      scores["collagen-peptides"] += 5;
-      scores["vitamin-c"] += 3;
-      scores["biotin"] += 3;
-    }
-  }
-  
-  // Score supplements based on cognitive goals
-  if (assessmentData.cognitiveGoals) {
-    if (assessmentData.cognitiveGoals.includes("Memory Enhancement")) {
-      scores["lions-mane"] += 5;
-      scores["omega-3"] += 4;
-      scores["vitamin-b-complex"] += 3;
-    }
-    
-    if (assessmentData.cognitiveGoals.includes("Focus Improvement")) {
-      scores["l-theanine"] += 4;
-      scores["rhodiola"] += 4;
-      scores["vitamin-b-complex"] += 3;
-      scores["creatine"] += 3;
-    }
-    
-    if (assessmentData.cognitiveGoals.includes("Neuroprotection")) {
-      scores["omega-3"] += 4;
-      scores["vitamin-e"] += 3;
-      scores["lions-mane"] += 4;
-      scores["resveratrol"] += 3;
-    }
-  }
-  
-  // Score supplements based on respiratory issues
-  if (assessmentData.respiratoryIssues) {
-    if (assessmentData.respiratoryIssues.includes("Frequent Colds")) {
-      scores["vitamin-c"] += 5;
-      scores["vitamin-d3"] += 4;
-      scores["zinc"] += 4;
-    }
-    
-    if (assessmentData.respiratoryIssues.includes("Seasonal Allergies")) {
-      scores["quercetin"] += 5;
-      scores["vitamin-c"] += 3;
-      scores["nac"] += 3;
-    }
-    
-    if (assessmentData.respiratoryIssues.includes("Asthma")) {
-      scores["vitamin-d3"] += 4;
-      scores["magnesium-glycinate"] += 3;
-      scores["quercetin"] += 4;
-      scores["omega-3"] += 4;
-    }
-  }
-  
-  // Sort supplements by score and take top recommendations
-  const sortedSupplements = recommendedSupplements.sort((a, b) => {
-    return (scores[b.id] || 0) - (scores[a.id] || 0);
-  });
-  
-  // Only return supplements that have at least some relevance
-  let result = sortedSupplements.filter(supp => (scores[supp.id] || 0) > 0);
-  
-  // If no supplements match (unlikely but possible), return the default recommendations
-  if (result.length === 0) {
-    result = supplements.filter(supp => supp.recommended);
-  }
+  // Combine the recommendations using a weighted ensemble approach
+  const finalRecommendations = combineRecommendations([
+    { recommendations: scoreBasedRecommendations, weight: 0.5 },
+    { recommendations: collaborativeRecommendations, weight: 0.3 },
+    { recommendations: ruleBasedRecommendations, weight: 0.2 }
+  ]);
   
   // Limit to 5 supplements for more personalized approach
-  result = result.slice(0, 5);
+  const result = finalRecommendations.slice(0, 5);
   
   // Mark these as recommended
   result.forEach(supp => {
@@ -477,7 +141,639 @@ export const getRecommendedSupplementsForUser = (assessmentData: AssessmentData)
   // Save assessment history
   saveAssessmentHistory(assessmentData, result);
   
+  console.log("Final recommendations:", result.map(r => r.name));
+  
   return result;
+};
+
+// Algorithm 1: Score-based recommendations (Enhanced from original)
+const getScoreBasedRecommendations = (assessmentData: AssessmentData): Supplement[] => {
+  let scores: { [key: string]: number } = {};
+  
+  // Initialize scores
+  supplements.forEach(supp => {
+    scores[supp.id] = 0;
+  });
+  
+  // Score supplements based on goals with improved weighting
+  if (assessmentData.goals && assessmentData.goals.length > 0) {
+    const goalWeight = WEIGHTING_FACTORS.GOALS;
+    
+    // Goal-based scoring
+    if (assessmentData.goals.includes("Energy Boost")) {
+      scores["vitamin-b-complex"] += 5 * goalWeight;
+      scores["magnesium-glycinate"] += 3 * goalWeight;
+      scores["coq10"] += 4 * goalWeight;
+      scores["l-theanine"] += 2 * goalWeight;
+      scores["iron"] += 4 * goalWeight;
+      scores["creatine"] += 3 * goalWeight;
+      scores["rhodiola"] += 4 * goalWeight; // Added
+    }
+    
+    if (assessmentData.goals.includes("Immune Support")) {
+      scores["vitamin-d3"] += 5 * goalWeight;
+      scores["zinc"] += 4 * goalWeight;
+      scores["vitamin-c"] += 5 * goalWeight; // Increased
+      scores["selenium"] += 4 * goalWeight;
+      scores["quercetin"] += 3 * goalWeight;
+      scores["probiotics"] += 4 * goalWeight; // Added
+    }
+    
+    if (assessmentData.goals.includes("Muscle Recovery")) {
+      scores["magnesium-glycinate"] += 4 * goalWeight;
+      scores["omega-3"] += 3 * goalWeight;
+      scores["creatine"] += 5 * goalWeight;
+      scores["glutamine"] += 5 * goalWeight; // Increased
+      scores["vitamin-d3"] += 3 * goalWeight; // Added
+      scores["zinc"] += 3 * goalWeight; // Added
+    }
+    
+    if (assessmentData.goals.includes("Better Sleep")) {
+      scores["magnesium-glycinate"] += 5 * goalWeight;
+      scores["l-theanine"] += 4 * goalWeight;
+      scores["ashwagandha"] += 4 * goalWeight;
+      scores["melatonin"] += 5 * goalWeight;
+      scores["5-htp"] += 3 * goalWeight;
+      scores["ginger"] += 2 * goalWeight; // Added for digestive calm
+    }
+    
+    if (assessmentData.goals.includes("Brain Function")) {
+      scores["omega-3"] += 5 * goalWeight;
+      scores["l-theanine"] += 4 * goalWeight;
+      scores["vitamin-b-complex"] += 4 * goalWeight; // Increased
+      scores["lions-mane"] += 5 * goalWeight;
+      scores["creatine"] += 3 * goalWeight;
+      scores["resveratrol"] += 3 * goalWeight; // Added
+    }
+    
+    if (assessmentData.goals.includes("Stress Management")) {
+      scores["ashwagandha"] += 5 * goalWeight;
+      scores["l-theanine"] += 5 * goalWeight; // Increased
+      scores["magnesium-glycinate"] += 4 * goalWeight; // Increased
+      scores["rhodiola"] += 4 * goalWeight;
+      scores["5-htp"] += 3 * goalWeight;
+      scores["vitamin-b-complex"] += 3 * goalWeight; // Added
+    }
+    
+    if (assessmentData.goals.includes("Metabolic Health")) {
+      scores["berberine"] += 5 * goalWeight;
+      scores["magnesium-glycinate"] += 3 * goalWeight;
+      scores["zinc"] += 2 * goalWeight;
+      scores["alpha-lipoic-acid"] += 4 * goalWeight;
+      scores["chromium"] += 3 * goalWeight;
+      scores["omega-3"] += 3 * goalWeight; // Added
+    }
+    
+    if (assessmentData.goals.includes("Heart Health")) {
+      scores["coq10"] += 5 * goalWeight;
+      scores["omega-3"] += 5 * goalWeight;
+      scores["vitamin-k2"] += 4 * goalWeight;
+      scores["berberine"] += 3 * goalWeight;
+      scores["quercetin"] += 3 * goalWeight;
+      scores["magnesium-glycinate"] += 4 * goalWeight; // Added
+      scores["resveratrol"] += 4 * goalWeight; // Added
+    }
+    
+    if (assessmentData.goals.includes("Skin Health")) {
+      scores["collagen-peptides"] += 5 * goalWeight;
+      scores["vitamin-c"] += 4 * goalWeight;
+      scores["biotin"] += 5 * goalWeight;
+      scores["vitamin-e"] += 4 * goalWeight;
+      scores["omega-3"] += 3 * goalWeight;
+      scores["zinc"] += 3 * goalWeight; // Added
+    }
+    
+    if (assessmentData.goals.includes("Longevity")) {
+      scores["resveratrol"] += 5 * goalWeight;
+      scores["coq10"] += 4 * goalWeight;
+      scores["nac"] += 4 * goalWeight;
+      scores["omega-3"] += 3 * goalWeight;
+      scores["vitamin-d3"] += 3 * goalWeight;
+      scores["vitamin-k2"] += 3 * goalWeight; // Added
+      scores["berberine"] += 3 * goalWeight; // Added
+    }
+    
+    if (assessmentData.goals.includes("Respiratory Health")) {
+      scores["nac"] += 5 * goalWeight;
+      scores["vitamin-c"] += 5 * goalWeight; // Increased
+      scores["vitamin-d3"] += 4 * goalWeight;
+      scores["quercetin"] += 5 * goalWeight; // Increased
+      scores["omega-3"] += 3 * goalWeight;
+      scores["zinc"] += 4 * goalWeight; // Added
+    }
+  }
+  
+  // Score supplements based on lifestyle with adjusted weighting
+  if (assessmentData.lifestyle) {
+    const lifestyleWeight = WEIGHTING_FACTORS.LIFESTYLE;
+    
+    if (assessmentData.lifestyle === "Very Active") {
+      scores["magnesium-glycinate"] += 4 * lifestyleWeight;
+      scores["omega-3"] += 3 * lifestyleWeight;
+      scores["vitamin-b-complex"] += 3 * lifestyleWeight;
+      scores["coq10"] += 3 * lifestyleWeight;
+      scores["creatine"] += 5 * lifestyleWeight;
+      scores["glutamine"] += 4 * lifestyleWeight;
+      scores["vitamin-d3"] += 3 * lifestyleWeight; // Added
+      scores["zinc"] += 3 * lifestyleWeight; // Added
+    } else if (assessmentData.lifestyle === "Moderately Active") {
+      scores["vitamin-d3"] += 3 * lifestyleWeight;
+      scores["magnesium-glycinate"] += 3 * lifestyleWeight;
+      scores["vitamin-b-complex"] += 3 * lifestyleWeight;
+      scores["omega-3"] += 3 * lifestyleWeight;
+      scores["zinc"] += 2 * lifestyleWeight;
+    } else if (assessmentData.lifestyle === "Sedentary") {
+      scores["vitamin-d3"] += 5 * lifestyleWeight; // Increased
+      scores["omega-3"] += 3 * lifestyleWeight; // Increased
+      scores["berberine"] += 3 * lifestyleWeight; // Increased
+      scores["coq10"] += 3 * lifestyleWeight;
+      scores["vitamin-b-complex"] += 3 * lifestyleWeight; // Added
+      scores["magnesium-glycinate"] += 3 * lifestyleWeight; // Added
+    }
+  }
+  
+  // Score supplements based on concerns with improved weighting
+  if (assessmentData.concerns && assessmentData.concerns.length > 0) {
+    const concernWeight = WEIGHTING_FACTORS.CONCERNS;
+    
+    if (assessmentData.concerns.includes("Joint Pain")) {
+      scores["omega-3"] += 5 * concernWeight;
+      scores["turmeric"] += 5 * concernWeight;
+      scores["vitamin-d3"] += 3 * concernWeight;
+      scores["msm"] += 5 * concernWeight;
+      scores["collagen-peptides"] += 5 * concernWeight; // Increased
+      scores["magnesium-glycinate"] += 3 * concernWeight; // Added
+    }
+    
+    if (assessmentData.concerns.includes("Digestive Issues")) {
+      scores["probiotics"] += 5 * concernWeight;
+      scores["berberine"] += 3 * concernWeight;
+      scores["glutamine"] += 5 * concernWeight; // Increased
+      scores["ginger"] += 4 * concernWeight;
+      scores["zinc"] += 2 * concernWeight; // Added
+      scores["magnesium-glycinate"] += 3 * concernWeight; // Added
+    }
+    
+    if (assessmentData.concerns.includes("Low Energy")) {
+      scores["vitamin-b-complex"] += 5 * concernWeight;
+      scores["vitamin-d3"] += 4 * concernWeight; // Increased
+      scores["coq10"] += 4 * concernWeight;
+      scores["iron"] += 5 * concernWeight;
+      scores["creatine"] += 3 * concernWeight;
+      scores["rhodiola"] += 4 * concernWeight; // Added
+      scores["magnesium-glycinate"] += 3 * concernWeight; // Added
+    }
+    
+    if (assessmentData.concerns.includes("Poor Sleep")) {
+      scores["magnesium-glycinate"] += 5 * concernWeight;
+      scores["l-theanine"] += 4 * concernWeight;
+      scores["ashwagandha"] += 4 * concernWeight;
+      scores["melatonin"] += 5 * concernWeight;
+      scores["5-htp"] += 3 * concernWeight;
+      scores["zinc"] += 2 * concernWeight; // Added
+      scores["vitamin-d3"] += 2 * concernWeight; // Added
+    }
+    
+    if (assessmentData.concerns.includes("Brain Fog")) {
+      scores["omega-3"] += 5 * concernWeight; // Increased
+      scores["vitamin-b-complex"] += 4 * concernWeight;
+      scores["l-theanine"] += 3 * concernWeight;
+      scores["lions-mane"] += 5 * concernWeight;
+      scores["rhodiola"] += 4 * concernWeight; // Increased
+      scores["vitamin-d3"] += 3 * concernWeight; // Added
+      scores["coq10"] += 3 * concernWeight; // Added
+    }
+    
+    // ... other concerns with similar adjustments
+    
+    if (assessmentData.concerns.includes("Stress")) {
+      scores["ashwagandha"] += 5 * concernWeight;
+      scores["l-theanine"] += 5 * concernWeight; // Increased
+      scores["magnesium-glycinate"] += 4 * concernWeight;
+      scores["rhodiola"] += 4 * concernWeight;
+      scores["5-htp"] += 3 * concernWeight;
+      scores["vitamin-b-complex"] += 4 * concernWeight; // Added
+    }
+    
+    if (assessmentData.concerns.includes("Blood Sugar Issues")) {
+      scores["berberine"] += 5 * concernWeight;
+      scores["magnesium-glycinate"] += 3 * concernWeight;
+      scores["zinc"] += 2 * concernWeight;
+      scores["alpha-lipoic-acid"] += 4 * concernWeight;
+      scores["chromium"] += 4 * concernWeight; // Added
+      scores["omega-3"] += 3 * concernWeight; // Added
+      scores["vitamin-d3"] += 3 * concernWeight; // Added
+    }
+    
+    if (assessmentData.concerns.includes("Heart Health Concerns")) {
+      scores["coq10"] += 5 * concernWeight;
+      scores["omega-3"] += 5 * concernWeight;
+      scores["vitamin-k2"] += 4 * concernWeight;
+      scores["quercetin"] += 3 * concernWeight;
+      scores["magnesium-glycinate"] += 4 * concernWeight; // Added
+      scores["berberine"] += 3 * concernWeight; // Added
+      scores["resveratrol"] += 4 * concernWeight; // Added
+    }
+    
+    if (assessmentData.concerns.includes("Anxiety")) {
+      scores["ashwagandha"] += 5 * concernWeight;
+      scores["l-theanine"] += 5 * concernWeight;
+      scores["magnesium-glycinate"] += 5 * concernWeight; // Increased
+      scores["5-htp"] += 4 * concernWeight;
+      scores["rhodiola"] += 3 * concernWeight;
+      scores["vitamin-b-complex"] += 3 * concernWeight; // Added
+      scores["vitamin-d3"] += 3 * concernWeight; // Added
+    }
+    
+    if (assessmentData.concerns.includes("Respiratory Issues")) {
+      scores["nac"] += 5 * concernWeight;
+      scores["vitamin-c"] += 5 * concernWeight; // Increased
+      scores["vitamin-d3"] += 5 * concernWeight; // Increased
+      scores["quercetin"] += 5 * concernWeight; // Increased
+      scores["zinc"] += 4 * concernWeight; // Added
+      scores["omega-3"] += 3 * concernWeight; // Added
+    }
+    
+    if (assessmentData.concerns.includes("Aging Concerns")) {
+      scores["resveratrol"] += 5 * concernWeight;
+      scores["coq10"] += 4 * concernWeight;
+      scores["omega-3"] += 3 * concernWeight;
+      scores["vitamin-d3"] += 3 * concernWeight;
+      scores["collagen-peptides"] += 4 * concernWeight;
+      scores["vitamin-k2"] += 3 * concernWeight; // Added
+      scores["nac"] += 3 * concernWeight; // Added
+    }
+  }
+  
+  // Score supplements based on deficiencies with high weighting
+  if (assessmentData.deficiencies && assessmentData.deficiencies.length > 0) {
+    const deficiencyWeight = WEIGHTING_FACTORS.DEFICIENCIES;
+    
+    assessmentData.deficiencies.forEach(deficiency => {
+      switch(deficiency) {
+        case "Vitamin D":
+          scores["vitamin-d3"] += 5 * deficiencyWeight;
+          break;
+        case "Magnesium":
+          scores["magnesium-glycinate"] += 5 * deficiencyWeight;
+          break;
+        case "Zinc":
+          scores["zinc"] += 5 * deficiencyWeight;
+          break;
+        case "Vitamin B12":
+          scores["vitamin-b-complex"] += 5 * deficiencyWeight;
+          break;
+        case "Omega-3":
+          scores["omega-3"] += 5 * deficiencyWeight;
+          break;
+        case "Vitamin K":
+          scores["vitamin-k2"] += 5 * deficiencyWeight;
+          break;
+        case "CoQ10":
+          scores["coq10"] += 5 * deficiencyWeight;
+          break;
+        case "Iron":
+          scores["iron"] += 5 * deficiencyWeight;
+          break;
+        case "Vitamin E":
+          scores["vitamin-e"] += 5 * deficiencyWeight;
+          break;
+        case "Selenium":
+          scores["selenium"] += 5 * deficiencyWeight;
+          break;
+        case "Antioxidants":
+          scores["vitamin-c"] += 4 * deficiencyWeight;
+          scores["vitamin-e"] += 4 * deficiencyWeight;
+          scores["selenium"] += 4 * deficiencyWeight;
+          scores["alpha-lipoic-acid"] += 4 * deficiencyWeight;
+          scores["resveratrol"] += 4 * deficiencyWeight;
+          break;
+        case "Collagen":
+          scores["collagen-peptides"] += 5 * deficiencyWeight;
+          scores["vitamin-c"] += 3 * deficiencyWeight;
+          break;
+      }
+    });
+  }
+  
+  // Additional factors: Age
+  if (assessmentData.age) {
+    const ageWeight = WEIGHTING_FACTORS.AGE;
+    const age = parseInt(assessmentData.age);
+    
+    if (age >= 50) {
+      scores["vitamin-d3"] += 4 * ageWeight;
+      scores["vitamin-b-complex"] += 3 * ageWeight;
+      scores["coq10"] += 4 * ageWeight;
+      scores["omega-3"] += 3 * ageWeight;
+      scores["magnesium-glycinate"] += 3 * ageWeight;
+      scores["vitamin-k2"] += 3 * ageWeight;
+    } else if (age >= 30) {
+      scores["vitamin-d3"] += 3 * ageWeight;
+      scores["magnesium-glycinate"] += 3 * ageWeight;
+      scores["vitamin-b-complex"] += 2 * ageWeight;
+    } else {
+      scores["vitamin-b-complex"] += 2 * ageWeight;
+      scores["magnesium-glycinate"] += 2 * ageWeight;
+      scores["zinc"] += 2 * ageWeight;
+    }
+  }
+  
+  // ... additional scoring factors for sleep quality, stress level, etc.
+  
+  // Sort supplements by score
+  const sortedSupplements = [...supplements].sort((a, b) => {
+    return (scores[b.id] || 0) - (scores[a.id] || 0);
+  });
+  
+  // Only return supplements that have relevance
+  return sortedSupplements.filter(supp => (scores[supp.id] || 0) > 0);
+};
+
+// Algorithm 2: Collaborative filtering-like approach
+const getCollaborativeRecommendations = (assessmentData: AssessmentData): Supplement[] => {
+  // Define "user profiles" that represent common health profiles
+  const userProfiles = [
+    {
+      name: "Athletic Performance",
+      supplements: ["creatine", "protein", "omega-3", "vitamin-d3", "magnesium-glycinate", "zinc"],
+      match: (data: AssessmentData) => 
+        data.lifestyle === "Very Active" && 
+        (data.goals.includes("Muscle Recovery") || data.goals.includes("Energy Boost"))
+    },
+    {
+      name: "Brain Health",
+      supplements: ["omega-3", "lions-mane", "vitamin-b-complex", "l-theanine", "vitamin-d3"],
+      match: (data: AssessmentData) => 
+        (data.goals.includes("Brain Function") || data.concerns.includes("Brain Fog")) &&
+        (data.cognitiveGoals?.includes("Memory Enhancement") || 
+         data.cognitiveGoals?.includes("Focus Improvement"))
+    },
+    {
+      name: "Sleep Optimization",
+      supplements: ["magnesium-glycinate", "l-theanine", "melatonin", "ashwagandha", "5-htp"],
+      match: (data: AssessmentData) => 
+        data.goals.includes("Better Sleep") || 
+        data.concerns.includes("Poor Sleep") ||
+        data.sleepQuality === "Poor"
+    },
+    {
+      name: "Stress Management",
+      supplements: ["ashwagandha", "l-theanine", "rhodiola", "magnesium-glycinate", "vitamin-b-complex"],
+      match: (data: AssessmentData) => 
+        data.goals.includes("Stress Management") || 
+        data.concerns.includes("Stress") ||
+        data.concerns.includes("Anxiety") ||
+        data.stressLevel === "High" || 
+        data.stressLevel === "Very High"
+    },
+    {
+      name: "Immune Support",
+      supplements: ["vitamin-c", "zinc", "vitamin-d3", "quercetin", "probiotics"],
+      match: (data: AssessmentData) => 
+        data.goals.includes("Immune Support") || 
+        data.respiratoryIssues?.includes("Frequent Colds") ||
+        data.concerns.includes("Respiratory Issues")
+    },
+    {
+      name: "Heart Health",
+      supplements: ["coq10", "omega-3", "vitamin-k2", "berberine", "magnesium-glycinate"],
+      match: (data: AssessmentData) => 
+        data.goals.includes("Heart Health") || 
+        data.concerns.includes("Heart Health Concerns")
+    },
+    {
+      name: "Aging Well",
+      supplements: ["resveratrol", "nac", "coq10", "vitamin-d3", "omega-3"],
+      match: (data: AssessmentData) => 
+        data.goals.includes("Longevity") || 
+        data.concerns.includes("Aging Concerns") ||
+        (parseInt(assessmentData.age) >= 50)
+    },
+    {
+      name: "Metabolic Health",
+      supplements: ["berberine", "alpha-lipoic-acid", "chromium", "magnesium-glycinate", "omega-3"],
+      match: (data: AssessmentData) => 
+        data.goals.includes("Metabolic Health") || 
+        data.concerns.includes("Blood Sugar Issues")
+    },
+    {
+      name: "Joint Support",
+      supplements: ["omega-3", "turmeric", "collagen-peptides", "msm", "vitamin-d3"],
+      match: (data: AssessmentData) => 
+        data.concerns.includes("Joint Pain")
+    },
+    {
+      name: "Skin Health",
+      supplements: ["collagen-peptides", "vitamin-c", "biotin", "vitamin-e", "omega-3"],
+      match: (data: AssessmentData) => 
+        data.goals.includes("Skin Health") || 
+        (data.skinConcerns && data.skinConcerns.length > 0)
+    }
+  ];
+  
+  // Find matching profiles and collect supplement recommendations
+  const supplementScores: { [key: string]: number } = {};
+  let totalMatchScore = 0;
+  
+  userProfiles.forEach(profile => {
+    // Calculate how well this profile matches the user
+    const isMatch = profile.match(assessmentData);
+    
+    if (isMatch) {
+      totalMatchScore++;
+      
+      // Add supplements from this profile to the recommendations
+      profile.supplements.forEach(suppId => {
+        supplementScores[suppId] = (supplementScores[suppId] || 0) + 1;
+      });
+    }
+  });
+  
+  // If no profiles matched, return empty array
+  if (totalMatchScore === 0) {
+    return [];
+  }
+  
+  // Convert scores to supplements and sort
+  const recommendedSupplements = supplements
+    .filter(supp => supplementScores[supp.id])
+    .sort((a, b) => (supplementScores[b.id] || 0) - (supplementScores[a.id] || 0));
+  
+  return recommendedSupplements;
+};
+
+// Algorithm 3: Rule-based expert system
+const getRuleBasedRecommendations = (assessmentData: AssessmentData): Supplement[] => {
+  // Essential supplements that almost everyone can benefit from
+  const essential = ["vitamin-d3", "magnesium-glycinate", "omega-3"];
+  
+  // Condition-specific rules
+  const rules: Array<{
+    condition: (data: AssessmentData) => boolean,
+    supplements: string[]
+  }> = [
+    // Age-based rules
+    {
+      condition: (data) => parseInt(data.age) >= 50,
+      supplements: ["vitamin-b-complex", "coq10", "vitamin-k2"]
+    },
+    {
+      condition: (data) => parseInt(data.age) >= 30 && parseInt(data.age) < 50,
+      supplements: ["coq10", "vitamin-b-complex"]
+    },
+    
+    // Lifestyle-based rules
+    {
+      condition: (data) => data.lifestyle === "Very Active",
+      supplements: ["creatine", "zinc", "vitamin-b-complex"]
+    },
+    {
+      condition: (data) => data.lifestyle === "Sedentary",
+      supplements: ["vitamin-d3", "vitamin-b-complex"]
+    },
+    
+    // Concern-based rules
+    {
+      condition: (data) => data.concerns.includes("Joint Pain"),
+      supplements: ["turmeric", "collagen-peptides", "msm"]
+    },
+    {
+      condition: (data) => data.concerns.includes("Digestive Issues"),
+      supplements: ["probiotics", "glutamine", "ginger"]
+    },
+    {
+      condition: (data) => data.concerns.includes("Low Energy"),
+      supplements: ["vitamin-b-complex", "iron", "rhodiola"]
+    },
+    {
+      condition: (data) => data.concerns.includes("Poor Sleep"),
+      supplements: ["magnesium-glycinate", "melatonin", "l-theanine"]
+    },
+    {
+      condition: (data) => data.concerns.includes("Brain Fog"),
+      supplements: ["lions-mane", "omega-3", "vitamin-b-complex"]
+    },
+    {
+      condition: (data) => data.concerns.includes("Stress") || data.concerns.includes("Anxiety"),
+      supplements: ["ashwagandha", "l-theanine", "rhodiola"]
+    },
+    {
+      condition: (data) => data.concerns.includes("Blood Sugar Issues"),
+      supplements: ["berberine", "alpha-lipoic-acid", "chromium"]
+    },
+    {
+      condition: (data) => data.concerns.includes("Heart Health Concerns"),
+      supplements: ["coq10", "omega-3", "vitamin-k2"]
+    },
+    {
+      condition: (data) => data.concerns.includes("Respiratory Issues"),
+      supplements: ["nac", "vitamin-c", "quercetin"]
+    },
+    
+    // Goal-based rules
+    {
+      condition: (data) => data.goals.includes("Energy Boost"),
+      supplements: ["vitamin-b-complex", "coq10", "rhodiola"]
+    },
+    {
+      condition: (data) => data.goals.includes("Immune Support"),
+      supplements: ["vitamin-c", "zinc", "vitamin-d3"]
+    },
+    {
+      condition: (data) => data.goals.includes("Muscle Recovery"),
+      supplements: ["creatine", "glutamine", "magnesium-glycinate"]
+    },
+    {
+      condition: (data) => data.goals.includes("Better Sleep"),
+      supplements: ["magnesium-glycinate", "melatonin", "ashwagandha"]
+    },
+    {
+      condition: (data) => data.goals.includes("Brain Function"),
+      supplements: ["lions-mane", "omega-3", "l-theanine"]
+    },
+    {
+      condition: (data) => data.goals.includes("Stress Management"),
+      supplements: ["ashwagandha", "l-theanine", "rhodiola"]
+    },
+    {
+      condition: (data) => data.goals.includes("Metabolic Health"),
+      supplements: ["berberine", "alpha-lipoic-acid", "chromium"]
+    },
+    {
+      condition: (data) => data.goals.includes("Heart Health"),
+      supplements: ["coq10", "omega-3", "vitamin-k2"]
+    },
+    {
+      condition: (data) => data.goals.includes("Skin Health"),
+      supplements: ["collagen-peptides", "vitamin-c", "biotin"]
+    },
+    {
+      condition: (data) => data.goals.includes("Longevity"),
+      supplements: ["resveratrol", "nac", "coq10"]
+    },
+    
+    // Special condition rules
+    {
+      condition: (data) => data.deficiencies?.includes("Vitamin D"),
+      supplements: ["vitamin-d3"]
+    },
+    {
+      condition: (data) => data.deficiencies?.includes("Magnesium"),
+      supplements: ["magnesium-glycinate"]
+    },
+    {
+      condition: (data) => data.deficiencies?.includes("Vitamin B12"),
+      supplements: ["vitamin-b-complex"]
+    },
+    {
+      condition: (data) => data.sleepQuality === "Poor" || data.sleepQuality === "Fair",
+      supplements: ["magnesium-glycinate", "melatonin", "ashwagandha"]
+    },
+    {
+      condition: (data) => data.stressLevel === "High" || data.stressLevel === "Very High",
+      supplements: ["ashwagandha", "l-theanine", "rhodiola"]
+    },
+    {
+      condition: (data) => data.energyLevel === "Low" || data.energyLevel === "Very Low",
+      supplements: ["vitamin-b-complex", "coq10", "rhodiola"]
+    }
+  ];
+  
+  // Start with essential supplements
+  const recommendedIds = new Set<string>(essential);
+  
+  // Apply all matching rules
+  rules.forEach(rule => {
+    if (rule.condition(assessmentData)) {
+      rule.supplements.forEach(supp => recommendedIds.add(supp));
+    }
+  });
+  
+  // Convert to supplement objects
+  return supplements.filter(supp => recommendedIds.has(supp.id));
+};
+
+// Combine multiple recommendation algorithms using an ensemble approach
+const combineRecommendations = (
+  algorithmResults: Array<{recommendations: Supplement[], weight: number}>
+): Supplement[] => {
+  const supplementScores: { [key: string]: number } = {};
+  
+  // Calculate weighted scores across all algorithms
+  algorithmResults.forEach(result => {
+    const { recommendations, weight } = result;
+    recommendations.forEach((supp, index) => {
+      // Higher position gets higher score (inverse ranking)
+      const positionScore = recommendations.length - index;
+      supplementScores[supp.id] = (supplementScores[supp.id] || 0) + (positionScore * weight);
+    });
+  });
+  
+  // Sort supplements by their combined scores
+  return supplements
+    .filter(supp => supplementScores[supp.id])
+    .sort((a, b) => (supplementScores[b.id] || 0) - (supplementScores[a.id] || 0));
 };
 
 // Save user's current assessment to history
