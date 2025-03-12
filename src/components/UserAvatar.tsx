@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   ChevronDown,
@@ -30,6 +29,7 @@ import {
   DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface UserAvatarProps {
   size?: "sm" | "md" | "lg";
@@ -39,6 +39,7 @@ interface UserAvatarProps {
 
 const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user } = useAuth();
   
   const userProfile = getUserProfile();
   const deficiencies = getUserDeficiencies();
@@ -52,10 +53,36 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
   };
   
   const getInitials = () => {
+    if (user?.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
     if (userProfile?.displayName) {
       return userProfile.displayName.charAt(0).toUpperCase();
     }
     return "U";
+  };
+  
+  const getUserName = () => {
+    if (user?.user_metadata?.full_name) {
+      return user.user_metadata.full_name;
+    }
+    if (user?.user_metadata?.name) {
+      return user.user_metadata.name;
+    }
+    if (user?.email) {
+      return user.email.split('@')[0];
+    }
+    if (userProfile?.displayName) {
+      return userProfile.displayName;
+    }
+    return "User";
+  };
+  
+  const getEmail = () => {
+    if (user?.email) {
+      return user.email;
+    }
+    return userProfile?.email || "";
   };
   
   const getLatestAssessmentDate = () => {
@@ -140,8 +167,8 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
               <DropdownMenuSubContent className="w-80 p-4">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="font-medium text-lg">{userProfile?.displayName || "User"}</h3>
-                    <p className="text-muted-foreground text-sm">{userProfile?.email || ""}</p>
+                    <h3 className="font-medium text-lg">{getUserName()}</h3>
+                    <p className="text-muted-foreground text-sm">{getEmail()}</p>
                     <div className="flex items-center gap-1 mt-1">
                       <TrendingUp className={cn(
                         "h-4 w-4",
@@ -162,7 +189,6 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
                 </div>
                 
                 <div className="space-y-4">
-                  {/* User Stats */}
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div className="bg-muted rounded-lg p-2">
                       <PieChart className="h-5 w-5 mx-auto mb-1 text-primary" />
@@ -181,7 +207,6 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
                     </div>
                   </div>
                   
-                  {/* Health Profile */}
                   {deficiencies.length > 0 && (
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium flex items-center gap-2">
