@@ -5,11 +5,13 @@ import Navbar from "@/components/Navbar";
 import Logo from "@/components/Logo";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+
 const Index = () => {
   useEffect(() => {
     // Scroll to top on page load
     window.scrollTo(0, 0);
   }, []);
+
   const features = [{
     icon: <Brain className="w-8 h-8 text-logo-magenta" />,
     title: "Cognitive Enhancement",
@@ -27,6 +29,7 @@ const Index = () => {
     title: "Personalized Plans",
     description: "Custom supplement recommendations based on your unique health profile."
   }];
+
   const testimonials = [{
     quote: "The personalized approach to supplements changed everything for me. I've never felt better.",
     author: "Sarah K., 34",
@@ -43,6 +46,7 @@ const Index = () => {
 
   // User profile images using provided Unsplash images
   const userImages = ["https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80", "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80", "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80", "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80"];
+
   return <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
       <Navbar />
       
@@ -77,7 +81,7 @@ const Index = () => {
                   </Button>
                 </Link>
                 <Link to="/signup">
-                  <Button size="lg" variant="outline" className="border-logo-purple hover:bg-logo-purple/10">
+                  <Button size="lg" variant="outline" className="border-white w-full sm:w-auto text-indigo-50 bg-violet-600 hover:bg-violet-500 text-base font-semibold">
                     Create Account
                   </Button>
                 </Link>
@@ -265,4 +269,5 @@ const Index = () => {
       </footer>
     </div>;
 };
+
 export default Index;
