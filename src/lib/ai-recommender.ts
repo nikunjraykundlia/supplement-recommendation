@@ -90,6 +90,74 @@ export const calculateWeeklyAssessmentScore = (): number => {
   return Math.round((takenRecords / totalRecords) * 100);
 };
 
+// Calculate a composite assessment score based on all user data
+export const calculateCompositeScore = (): number => {
+  // Get all relevant user data
+  const complianceScore = calculateWeeklyAssessmentScore();
+  const assessmentHistory = getAssessmentHistory();
+  
+  // If no history exists, return just the compliance score or 0
+  if (assessmentHistory.length === 0) {
+    return complianceScore || 0;
+  }
+  
+  // Calculate assessment progress component (20% weight)
+  const progressComponent = (() => {
+    if (assessmentHistory.length < 2) return 50; // Neutral score for single assessment
+    
+    const initialScore = assessmentHistory[0].complianceScore || 0;
+    const latestScore = assessmentHistory[assessmentHistory.length - 1].complianceScore || 0;
+    const progressDelta = latestScore - initialScore;
+    
+    // Scale progress from -100 to +100 range to 0-100 range
+    return Math.min(Math.max((progressDelta + 100) / 2, 0), 100);
+  })();
+  
+  // Calculate consistency component (30% weight)
+  const consistencyComponent = (() => {
+    // If less than 3 assessments, give benefit of doubt
+    if (assessmentHistory.length < 3) return 70;
+    
+    // Get last 5 assessments or all if less than 5
+    const recentAssessments = assessmentHistory.slice(-5);
+    const scores = recentAssessments.map(a => a.complianceScore || 0);
+    
+    // Calculate standard deviation (lower is better - more consistent)
+    const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const squaredDiffs = scores.map(score => Math.pow(score - mean, 2));
+    const variance = squaredDiffs.reduce((a, b) => a + b, 0) / scores.length;
+    const stdDev = Math.sqrt(variance);
+    
+    // Convert stdDev to a 0-100 score (0 stdDev = 100 score, 50+ stdDev = 0 score)
+    return Math.max(0, 100 - (stdDev * 2));
+  })();
+  
+  // Calculate recency component (20% weight)
+  const recencyComponent = (() => {
+    const lastAssessmentDate = new Date(assessmentHistory[assessmentHistory.length - 1].date);
+    const now = new Date();
+    const daysSinceLastAssessment = Math.floor((now.getTime() - lastAssessmentDate.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // Score decreases the longer it's been since last assessment
+    // 0 days = 100 score, 30+ days = 0 score
+    return Math.max(0, 100 - (daysSinceLastAssessment * (100/30)));
+  })();
+  
+  // Current compliance score component (30% weight)
+  const currentScoreComponent = complianceScore || 0;
+  
+  // Calculate composite score with weights
+  const compositeScore = (
+    (progressComponent * 0.2) + 
+    (consistencyComponent * 0.3) + 
+    (recencyComponent * 0.2) + 
+    (currentScoreComponent * 0.3)
+  );
+  
+  // Return normalized score (0-100)
+  return Math.round(Math.max(0, Math.min(100, compositeScore)));
+};
+
 // Advanced weighting factors for different assessment components
 const WEIGHTING_FACTORS = {
   GOALS: 1.0,

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   ChevronDown,
@@ -12,10 +13,17 @@ import {
   Target,
   Leaf,
   TrendingUp,
-  User
+  User,
+  Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getUserProfile, getUserDeficiencies, getUserStrengthAreas, getAssessmentHistory } from "@/lib/ai-recommender";
+import { 
+  getUserProfile, 
+  getUserDeficiencies, 
+  getUserStrengthAreas, 
+  getAssessmentHistory, 
+  calculateCompositeScore 
+} from "@/lib/ai-recommender";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -45,6 +53,7 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
   const deficiencies = getUserDeficiencies();
   const strengthAreas = getUserStrengthAreas();
   const assessmentHistory = getAssessmentHistory();
+  const compositeScore = calculateCompositeScore();
   
   const sizeClasses = {
     sm: "h-8 w-8",
@@ -123,6 +132,13 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
     return "Stable";
   };
   
+  const getCompositeScoreColor = () => {
+    if (compositeScore >= 80) return "text-green-500";
+    if (compositeScore >= 60) return "text-blue-500";
+    if (compositeScore >= 40) return "text-yellow-500";
+    return "text-red-500";
+  };
+  
   if (!showMenu) {
     return (
       <Avatar className={cn(sizeClasses[size])}>
@@ -186,6 +202,20 @@ const UserAvatar = ({ size = "md", showMenu = true, onSignOut }: UserAvatarProps
                       {getInitials()}
                     </AvatarFallback>
                   </Avatar>
+                </div>
+                
+                {/* New Assessment Score Display */}
+                <div className="mb-6 bg-muted/30 rounded-lg p-3 text-center">
+                  <div className="flex items-center justify-center gap-2 mb-1">
+                    <Activity className="h-5 w-5 text-primary" />
+                    <h4 className="text-sm font-medium">Overall Assessment Score</h4>
+                  </div>
+                  <div className={cn("text-2xl font-bold", getCompositeScoreColor())}>
+                    {compositeScore}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Based on your history, progress, and compliance
+                  </p>
                 </div>
                 
                 <div className="space-y-4">
