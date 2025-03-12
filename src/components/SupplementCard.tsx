@@ -4,6 +4,7 @@ import { Plus, Check, Info } from "lucide-react";
 import { Supplement } from "@/lib/supplements";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import getAIGeneratedSupplementImage from "@/lib/aiImageGenerator";
 
 interface SupplementCardProps {
   supplement: Supplement;
@@ -22,36 +23,16 @@ const SupplementCard = ({
 }: SupplementCardProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageFailed, setImageFailed] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
+  const [currentImageUrl, setCurrentImageUrl] = useState(supplement.imageUrl);
   
-  // High-quality fallback images for different supplement categories
-  const categoryFallbackImages = {
-    "Vitamin": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Mineral": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Essential Fatty Acid": "https://images.unsplash.com/photo-1535185384036-28bbc8035f28?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Herbal": "https://images.unsplash.com/photo-1615485500704-8e990f9900e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Adaptogen": "https://images.unsplash.com/photo-1611075384322-404243d037c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Antioxidant": "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Medicinal Mushroom": "https://images.unsplash.com/photo-1607469256565-921a7272dbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Sleep Aid": "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Amino Acid": "https://images.unsplash.com/photo-1546430783-fe4b9c159e52?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Digestive Health": "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Joint Support": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Mood Support": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Performance": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Polyphenol": "https://images.unsplash.com/photo-1552526881-5517a57b6d4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Structural Protein": "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "Superfood": "https://images.unsplash.com/photo-1597736595206-99a8c173964f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-  };
-
-  // Default fallback for categories not in our map
-  const defaultFallback = "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
-  
-  // Get appropriate fallback based on supplement category
-  const getFallbackImage = () => {
-    return categoryFallbackImages[supplement.category as keyof typeof categoryFallbackImages] || defaultFallback;
-  };
+  // Ensure we have an image that will load
+  useEffect(() => {
+    // Make sure we have a valid image URL
+    if (!currentImageUrl || currentImageUrl === '') {
+      const backupImage = getAIGeneratedSupplementImage(supplement.name, supplement.category);
+      setCurrentImageUrl(backupImage);
+    }
+  }, [supplement, currentImageUrl]);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -68,33 +49,11 @@ const SupplementCard = ({
   };
 
   const handleImageError = () => {
-    setImageFailed(true);
-    setImageLoaded(false);
-    
-    // Try different fallback image based on category
-    const fallbackSrc = getFallbackImage();
-    const imgElement = document.getElementById(`supp-img-${supplement.id}`) as HTMLImageElement;
-    
-    if (imgElement) {
-      imgElement.src = fallbackSrc;
-    }
-    
-    // After a short delay, mark as loaded
-    setTimeout(() => {
-      setImageLoaded(true);
-    }, 300);
-    
-    // Increment retry count to avoid infinite loops
-    setRetryCount(prev => prev + 1);
+    console.log(`Image failed to load for ${supplement.name}, using AI-generated fallback`);
+    // If the primary image fails, use our guaranteed AI image generator
+    const fallbackImage = getAIGeneratedSupplementImage(supplement.name, supplement.category);
+    setCurrentImageUrl(fallbackImage);
   };
-
-  // Clean up effect for images that never load
-  useEffect(() => {
-    if (imageFailed && retryCount > 2) {
-      // After multiple retries, just show it as loaded with fallback
-      setImageLoaded(true);
-    }
-  }, [imageFailed, retryCount]);
 
   return (
     <div className={cn(
@@ -112,8 +71,7 @@ const SupplementCard = ({
           </div>
         )}
         <img
-          id={`supp-img-${supplement.id}`}
-          src={supplement.imageUrl || getFallbackImage()}
+          src={currentImageUrl}
           alt={supplement.name}
           className={cn(
             "w-full h-full object-cover transition-all duration-300",

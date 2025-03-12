@@ -80,11 +80,6 @@ const Index = () => {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
-                <Link to="/signup">
-                  <Button size="lg" variant="outline" className="border-white w-full sm:w-auto text-indigo-50 bg-violet-600 hover:bg-violet-500 text-base font-semibold">
-                    Create Account
-                  </Button>
-                </Link>
               </div>
               
               <div className="mt-8 flex items-center justify-center lg:justify-start space-x-2 text-sm">
@@ -244,11 +239,6 @@ const Index = () => {
                 <Button size="lg" className="bg-white text-logo-magenta hover:bg-gray-100 w-full sm:w-auto">
                   Take Free Assessment
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button size="lg" variant="outline" className="border-white w-full sm:w-auto text-indigo-50 bg-violet-600 hover:bg-violet-500 text-base font-semibold">
-                  Create Account
                 </Button>
               </Link>
             </div>

@@ -1,3 +1,5 @@
+import getAIGeneratedSupplementImage from './aiImageGenerator';
+
 export interface Supplement {
   id: string;
   name: string;
@@ -11,43 +13,9 @@ export interface Supplement {
   scientific_references?: string[];
 }
 
-const getSupplementImageUrl = (supplement: string): string => {
-  const defaultImages = {
-    "vitamin-d3": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "magnesium-glycinate": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "omega-3": "https://images.unsplash.com/photo-1535185384036-28bbc8035f28?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "vitamin-b-complex": "https://images.unsplash.com/photo-1550572017-edd951b55104?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "zinc": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "probiotics": "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "vitamin-c": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "turmeric": "https://images.unsplash.com/photo-1615485500704-8e990f9900e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "ashwagandha": "https://images.unsplash.com/photo-1611075384322-404243d037c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "coq10": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "vitamin-k2": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "l-theanine": "https://images.unsplash.com/photo-1546430783-fe4b9c159e52?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "berberine": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "melatonin": "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "collagen-peptides": "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "nac": "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "lions-mane": "https://images.unsplash.com/photo-1607469256565-921a7272dbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "resveratrol": "https://images.unsplash.com/photo-1552526881-5517a57b6d4a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "rhodiola": "https://images.unsplash.com/photo-1611930022073-84a47d8afeac?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "spirulina": "https://images.unsplash.com/photo-1597736595206-99a8c173964f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "alpha-lipoic-acid": "https://images.unsplash.com/photo-1585435557885-6511f1e0e3a4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "quercetin": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "selenium": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "vitamin-e": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "biotin": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "glutamine": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "iron": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "creatine": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "5-htp": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "ginger": "https://images.unsplash.com/photo-1615485500704-8e990f9900e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    "msm": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-  };
-
-  return defaultImages[supplement as keyof typeof defaultImages] || 
-         "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
+// Get a reliable supplement image URL that won't fail to load
+const getSupplementImageUrl = (supplement: string, category: string = "Vitamin"): string => {
+  return getAIGeneratedSupplementImage(supplement, category);
 };
 
 export const supplements: Supplement[] = [
@@ -63,7 +31,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "2000 IU daily",
     timing: "Morning with food",
-    imageUrl: getSupplementImageUrl("vitamin-d3"),
+    imageUrl: getSupplementImageUrl("vitamin-d3", "Vitamin"),
     recommended: true,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6121423/",
@@ -82,7 +50,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "400mg daily",
     timing: "Evening before bed",
-    imageUrl: getSupplementImageUrl("magnesium-glycinate"),
+    imageUrl: getSupplementImageUrl("magnesium-glycinate", "Mineral"),
     recommended: true,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5637834/",
@@ -101,7 +69,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "1000mg daily",
     timing: "With meals",
-    imageUrl: getSupplementImageUrl("omega-3"),
+    imageUrl: getSupplementImageUrl("omega-3", "Essential Fatty Acid"),
     recommended: true,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3262608/",
@@ -120,7 +88,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "1 capsule daily",
     timing: "Morning with breakfast",
-    imageUrl: getSupplementImageUrl("vitamin-b-complex"),
+    imageUrl: getSupplementImageUrl("vitamin-b-complex", "Vitamin"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4772032/",
@@ -139,7 +107,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "15mg daily",
     timing: "With food",
-    imageUrl: getSupplementImageUrl("zinc"),
+    imageUrl: getSupplementImageUrl("zinc", "Mineral"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2820120/",
@@ -158,7 +126,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "10 billion CFU daily",
     timing: "Morning before breakfast",
-    imageUrl: getSupplementImageUrl("probiotics"),
+    imageUrl: getSupplementImageUrl("probiotics", "Digestive Health"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6340058/",
@@ -177,7 +145,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "500-1000mg daily",
     timing: "Throughout the day with meals",
-    imageUrl: getSupplementImageUrl("vitamin-c"),
+    imageUrl: getSupplementImageUrl("vitamin-c", "Vitamin"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5707683/",
@@ -196,7 +164,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "500-1000mg daily",
     timing: "With food containing some fat",
-    imageUrl: getSupplementImageUrl("turmeric"),
+    imageUrl: getSupplementImageUrl("turmeric", "Herbal"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5664031/",
@@ -215,7 +183,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "300-500mg daily",
     timing: "Morning or evening",
-    imageUrl: getSupplementImageUrl("ashwagandha"),
+    imageUrl: getSupplementImageUrl("ashwagandha", "Adaptogen"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6979308/",
@@ -234,7 +202,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "100-200mg daily",
     timing: "With a meal containing fat",
-    imageUrl: getSupplementImageUrl("coq10"),
+    imageUrl: getSupplementImageUrl("coq10", "Antioxidant"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6131403/",
@@ -253,7 +221,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "100-200mcg daily",
     timing: "With food containing fat",
-    imageUrl: getSupplementImageUrl("vitamin-k2"),
+    imageUrl: getSupplementImageUrl("vitamin-k2", "Vitamin"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4566462/",
@@ -272,7 +240,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "200-400mg daily",
     timing: "Morning or evening",
-    imageUrl: getSupplementImageUrl("l-theanine"),
+    imageUrl: getSupplementImageUrl("l-theanine", "Amino Acid"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6836118/",
@@ -291,7 +259,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "500mg 2-3 times daily",
     timing: "Before meals",
-    imageUrl: getSupplementImageUrl("berberine"),
+    imageUrl: getSupplementImageUrl("berberine", "Herbal"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6587018/",
@@ -310,7 +278,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "1-3mg before bedtime",
     timing: "30-60 minutes before sleep",
-    imageUrl: getSupplementImageUrl("melatonin"),
+    imageUrl: getSupplementImageUrl("melatonin", "Sleep Aid"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6057895/",
@@ -329,7 +297,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "10-20g daily",
     timing: "Any time of day, consistently",
-    imageUrl: getSupplementImageUrl("collagen-peptides"),
+    imageUrl: getSupplementImageUrl("collagen-peptides", "Structural Protein"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6835901/",
@@ -348,7 +316,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "600-1200mg daily",
     timing: "With or without food",
-    imageUrl: getSupplementImageUrl("nac"),
+    imageUrl: getSupplementImageUrl("nac", "Amino Acid"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6562654/",
@@ -367,7 +335,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "500-1000mg daily",
     timing: "Morning or afternoon with food",
-    imageUrl: getSupplementImageUrl("lions-mane"),
+    imageUrl: getSupplementImageUrl("lions-mane", "Medicinal Mushroom"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6438434/",
@@ -386,7 +354,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "150-500mg daily",
     timing: "With meals",
-    imageUrl: getSupplementImageUrl("resveratrol"),
+    imageUrl: getSupplementImageUrl("resveratrol", "Polyphenol"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6164842/",
@@ -405,7 +373,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "200-600mg daily",
     timing: "Morning, preferably before breakfast",
-    imageUrl: getSupplementImageUrl("rhodiola"),
+    imageUrl: getSupplementImageUrl("rhodiola", "Adaptogen"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5836007/",
@@ -424,7 +392,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "1-3g daily",
     timing: "Morning or afternoon with food",
-    imageUrl: getSupplementImageUrl("spirulina"),
+    imageUrl: getSupplementImageUrl("spirulina", "Superfood"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3136577/",
@@ -443,7 +411,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "300-600mg daily",
     timing: "With meals",
-    imageUrl: getSupplementImageUrl("alpha-lipoic-acid"),
+    imageUrl: getSupplementImageUrl("alpha-lipoic-acid", "Antioxidant"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6723188/",
@@ -462,7 +430,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "500-1000mg daily",
     timing: "With meals",
-    imageUrl: getSupplementImageUrl("quercetin"),
+    imageUrl: getSupplementImageUrl("quercetin", "Antioxidant"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6273625/",
@@ -481,7 +449,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "50-200mcg daily",
     timing: "With food",
-    imageUrl: getSupplementImageUrl("selenium"),
+    imageUrl: getSupplementImageUrl("selenium", "Mineral"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6163284/",
@@ -500,7 +468,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "15-30mg (22-45 IU) daily",
     timing: "With a meal containing fat",
-    imageUrl: getSupplementImageUrl("vitamin-e"),
+    imageUrl: getSupplementImageUrl("vitamin-e", "Vitamin"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6266234/",
@@ -519,7 +487,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "5000mcg daily",
     timing: "Any time of day with food",
-    imageUrl: getSupplementImageUrl("biotin"),
+    imageUrl: getSupplementImageUrl("biotin", "Vitamin"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6380979/",
@@ -538,7 +506,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "5-10g daily",
     timing: "Between meals",
-    imageUrl: getSupplementImageUrl("glutamine"),
+    imageUrl: getSupplementImageUrl("glutamine", "Amino Acid"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5946267/",
@@ -557,7 +525,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "15-45mg daily (under medical supervision)",
     timing: "On an empty stomach with vitamin C",
-    imageUrl: getSupplementImageUrl("iron"),
+    imageUrl: getSupplementImageUrl("iron", "Mineral"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5986027/",
@@ -576,7 +544,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "3-5g daily",
     timing: "Any time of day, consistently",
-    imageUrl: getSupplementImageUrl("creatine"),
+    imageUrl: getSupplementImageUrl("creatine", "Performance"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6950923/",
@@ -595,7 +563,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "50-200mg daily",
     timing: "Before bedtime",
-    imageUrl: getSupplementImageUrl("5-htp"),
+    imageUrl: getSupplementImageUrl("5-htp", "Mood Support"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3415362/",
@@ -614,7 +582,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "500-1000mg daily",
     timing: "With meals",
-    imageUrl: getSupplementImageUrl("ginger"),
+    imageUrl: getSupplementImageUrl("ginger", "Herbal"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6616534/",
@@ -633,7 +601,7 @@ export const supplements: Supplement[] = [
     ],
     dosage: "1000-3000mg daily",
     timing: "With meals",
-    imageUrl: getSupplementImageUrl("msm"),
+    imageUrl: getSupplementImageUrl("msm", "Joint Support"),
     recommended: false,
     scientific_references: [
       "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5372953/",
